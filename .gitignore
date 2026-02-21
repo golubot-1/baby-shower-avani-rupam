@@ -1,0 +1,4 @@
+node_modules/
+rsvps.json
+bot-state.json
+*.log
