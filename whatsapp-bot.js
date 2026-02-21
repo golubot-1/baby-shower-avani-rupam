@@ -25,7 +25,7 @@ const path = require('path');
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID || 'YOUR_ACCOUNT_SID';
 const TWILIO_AUTH_TOKEN  = process.env.TWILIO_AUTH_TOKEN  || 'YOUR_AUTH_TOKEN';
 const TWILIO_WA_NUMBER   = process.env.TWILIO_WA_NUMBER   || 'whatsapp:+14155238886';
-const PORT = 3334;
+const PORT = process.env.PORT || 3334;
 // ────────────────────────────────────────────────────────────────────────
 
 const app = express();
