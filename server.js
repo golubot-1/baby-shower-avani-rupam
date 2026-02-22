@@ -10,7 +10,7 @@ app.use(express.static(__dirname));
 
 // SUPABASE CONFIG
 const supabaseUrl = 'https://lgcqmvrgpnfnyqvjqxab.supabase.co';
-const supabaseKey = 'sb_publishable_WezuM1X4TcccJIKr4P9RyQ_mte-rj';
+const supabaseKey = 'sb_publishable_WezuM1X4TcccJIKr4P9RyQ_mte-rjVe';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
@@ -33,10 +33,11 @@ app.post('/api/rsvp', async (req, res) => {
 app.get('/api/rsvps', async (req, res) => {
   if (req.query.key !== 'babyshower2026') return res.status(401).json({ error: 'Unauthorized' });
   try {
-    const { data, error } = await supabase.from('rsvps').select('*');
+    const { data, error } = await supabase.from('rsvps').select('*').order('timestamp', { ascending: false });
     if (error) throw error;
     res.json({ count: data.length, rsvps: data });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Failed to fetch RSVPs' });
   }
 });
