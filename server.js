@@ -8,9 +8,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// SUPABASE CONFIG (Placeholder)
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
+// SUPABASE CONFIG
+const supabaseUrl = 'https://lgcqmvrgpnfnyqvjqxab.supabase.co';
+const supabaseKey = 'sb_publishable_WezuM1X4TcccJIKr4P9RyQ_mte-rj';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
@@ -18,7 +18,7 @@ app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html'))
 
 app.post('/api/rsvp', async (req, res) => {
   try {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('rsvps')
       .insert([{ ...req.body, timestamp: new Date().toISOString() }]);
     
