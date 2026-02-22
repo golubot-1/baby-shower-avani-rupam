@@ -28,5 +28,5 @@ app.get('/api/rsvps', (req, res) => {
   res.json({ count: rsvps.length, rsvps });
 });
 
-const PORT = 3333;
+const PORT = process.env.PORT || 3333;
 app.listen(PORT, () => console.log(`🎊 Baby Shower site running at http://localhost:${PORT}`));
