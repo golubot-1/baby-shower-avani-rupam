@@ -106,7 +106,7 @@
 <div id="login-box">
     <h1>Admin Access</h1>
     <input type="password" id="passkey" placeholder="Enter Access Key">
-    <button onclick="fetchRSVPs()">Unlock Guest List</button>
+    <button onclick="login()">Unlock Guest List</button>
 </div>
 
 <div id="admin-content" class="container">
@@ -145,15 +145,36 @@
             <!-- Rows injected here -->
         </tbody>
     </table>
+    <button onclick="logout()" style="margin-top:2rem; width:auto; background:#eee; color:#666; padding:0.5rem 1rem;">Logout</button>
 </div>
 
 <script>
-    async function fetchRSVPs() {
+    // Auto-login on refresh
+    window.onload = () => {
+        const savedKey = localStorage.getItem('as_key');
+        if (savedKey) {
+            document.getElementById('passkey').value = savedKey;
+            fetchRSVPs(savedKey);
+        }
+    };
+
+    function login() {
         const key = document.getElementById('passkey').value;
+        localStorage.setItem('as_key', key);
+        fetchRSVPs(key);
+    }
+
+    function logout() {
+        localStorage.removeItem('as_key');
+        location.reload();
+    }
+
+    async function fetchRSVPs(key) {
         const res = await fetch(`/api/rsvps?key=${key}`);
         
         if (res.status === 401) {
             alert('Invalid Key');
+            localStorage.removeItem('as_key');
             return;
         }
 
@@ -168,23 +189,27 @@
         let girls = 0;
         let boys = 0;
 
-        data.rsvps.forEach(rsvp => {
-            const isYes = rsvp.attending === 'yes';
-            if (isYes) totalGuests += parseInt(rsvp.guests || 1);
-            if (rsvp.prediction === 'girl') girls++;
-            if (rsvp.prediction === 'boy') boys++;
+        if (!data.rsvps || data.rsvps.length === 0) {
+            table.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:2rem; color:#999;">No RSVPs found yet.</td></tr>';
+        } else {
+            data.rsvps.forEach(rsvp => {
+                const isYes = rsvp.attending === 'yes';
+                if (isYes) totalGuests += parseInt(rsvp.guests || 1);
+                if (rsvp.prediction === 'girl') girls++;
+                if (rsvp.prediction === 'boy') boys++;
 
-            const row = `<tr>
-                <td><strong>${rsvp.name}</strong></td>
-                <td class="${isYes ? 'status-yes' : 'status-no'}">${isYes ? 'Attending' : 'Not Attending'}</td>
-                <td>${isYes ? rsvp.guests : '-'}</td>
-                <td class="prediction-${rsvp.prediction}">${rsvp.prediction || '-'}</td>
-                <td style="font-size: 0.9rem; color: #666;">${rsvp.message || ''}</td>
-            </tr>`;
-            table.innerHTML += row;
-        });
+                const row = `<tr>
+                    <td><strong>${rsvp.name}</strong></td>
+                    <td class="${isYes ? 'status-yes' : 'status-no'}">${isYes ? 'Attending' : 'Not Attending'}</td>
+                    <td>${isYes ? (rsvp.guests || 1) : '-'}</td>
+                    <td class="prediction-${rsvp.prediction}">${rsvp.prediction || '-'}</td>
+                    <td style="font-size: 0.9rem; color: #666;">${rsvp.message || ''}</td>
+                </tr>`;
+                table.innerHTML += row;
+            });
+        }
 
-        document.getElementById('stat-total').textContent = data.count;
+        document.getElementById('stat-total').textContent = data.count || 0;
         document.getElementById('stat-count').textContent = totalGuests;
         document.getElementById('stat-girl').textContent = girls;
         document.getElementById('stat-boy').textContent = boys;
