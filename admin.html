@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest List | Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #fdfaf5;
+            --gold: #af8f2c;
+            --text-main: #1a1a1a;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-family: 'Cinzel Decorative', serif;
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 2rem;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #fff;
+            padding: 1.5rem;
+            border: 1px solid #eee;
+            text-align: center;
+            border-radius: 4px;
+        }
+        .stat-num {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+        }
+        .stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #666;
+        }
+        table {
+            width: 100%;
+            background: #fff;
+            border-collapse: collapse;
+            border: 1px solid #eee;
+        }
+        th, td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background: #f9f9f9;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .status-yes { color: #27ae60; font-weight: 600; }
+        .status-no { color: #e74c3c; font-weight: 600; }
+        .prediction-girl { color: #d63031; }
+        .prediction-boy { color: #0984e3; }
+        #login-box {
+            max-width: 400px;
+            margin: 100px auto;
+            background: #fff;
+            padding: 2rem;
+            border: 1px solid #eee;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 1rem 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 0.8rem;
+            background: var(--text-main);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        #admin-content { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="login-box">
+    <h1>Admin Access</h1>
+    <input type="password" id="passkey" placeholder="Enter Access Key">
+    <button onclick="fetchRSVPs()">Unlock Guest List</button>
+</div>
+
+<div id="admin-content" class="container">
+    <h1>Guest List</h1>
+    
+    <div class="stats">
+        <div class="stat-card">
+            <span class="stat-num" id="stat-total">0</span>
+            <span class="stat-label">Total RSVPs</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-num" id="stat-count">0</span>
+            <span class="stat-label">Total Guests</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-num" id="stat-girl">0</span>
+            <span class="stat-label">Team Girl</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-num" id="stat-boy">0</span>
+            <span class="stat-label">Team Boy</span>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Guests</th>
+                <th>Prediction</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody id="guest-table">
+            <!-- Rows injected here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    async function fetchRSVPs() {
+        const key = document.getElementById('passkey').value;
+        const res = await fetch(`/api/rsvps?key=${key}`);
+        
+        if (res.status === 401) {
+            alert('Invalid Key');
+            return;
+        }
+
+        const data = await res.json();
+        document.getElementById('login-box').style.display = 'none';
+        document.getElementById('admin-content').style.display = 'block';
+
+        const table = document.getElementById('guest-table');
+        table.innerHTML = '';
+        
+        let totalGuests = 0;
+        let girls = 0;
+        let boys = 0;
+
+        data.rsvps.forEach(rsvp => {
+            const isYes = rsvp.attending === 'yes';
+            if (isYes) totalGuests += parseInt(rsvp.guests || 1);
+            if (rsvp.prediction === 'girl') girls++;
+            if (rsvp.prediction === 'boy') boys++;
+
+            const row = `<tr>
+                <td><strong>${rsvp.name}</strong></td>
+                <td class="${isYes ? 'status-yes' : 'status-no'}">${isYes ? 'Attending' : 'Not Attending'}</td>
+                <td>${isYes ? rsvp.guests : '-'}</td>
+                <td class="prediction-${rsvp.prediction}">${rsvp.prediction || '-'}</td>
+                <td style="font-size: 0.9rem; color: #666;">${rsvp.message || ''}</td>
+            </tr>`;
+            table.innerHTML += row;
+        });
+
+        document.getElementById('stat-total').textContent = data.count;
+        document.getElementById('stat-count').textContent = totalGuests;
+        document.getElementById('stat-girl').textContent = girls;
+        document.getElementById('stat-boy').textContent = boys;
+    }
+</script>
+</body>
+</html>
