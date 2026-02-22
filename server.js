@@ -26,7 +26,7 @@ app.post('/api/rsvp', async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message || 'Failed to save RSVP' });
+    res.status(500).json({ error: 'Failed to save RSVP' });
   }
 });
 
@@ -34,13 +34,11 @@ app.get('/api/rsvps', async (req, res) => {
   if (req.query.key !== 'babyshower2026') return res.status(401).json({ error: 'Unauthorized' });
   try {
     const { data, error } = await supabase.from('rsvps').select('*').order('timestamp', { ascending: false });
-    if (error) {
-        return res.status(500).json({ error: error.message, details: error.details, hint: error.hint });
-    }
-    res.json({ count: data.length, rsvps: data });
+    if (error) throw error;
+    res.json({ count: data.length, rsvps: data || [] });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: err.message || 'Failed to fetch RSVPs' });
+    res.status(500).json({ error: 'Failed to fetch RSVPs' });
   }
 });
 
