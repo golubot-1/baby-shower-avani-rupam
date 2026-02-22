@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
+const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
 
 const app = express();
@@ -8,49 +8,40 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// RAILWAY PERSISTENT VOLUME PATH:
-// By default, Railway's /data mount is persistent.
-// We'll fall back to __dirname for local development.
-const DATA_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || __dirname;
-const RSVP_FILE = path.join(DATA_DIR, 'rsvps.json');
-
-if (!fs.existsSync(RSVP_FILE)) {
-    console.log('Initializing RSVP store at:', RSVP_FILE);
-    fs.writeFileSync(RSVP_FILE, '[]');
-}
+// SUPABASE CONFIG (Placeholder)
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
-app.post('/api/rsvp', (req, res) => {
+app.post('/api/rsvp', async (req, res) => {
   try {
-    const data = fs.readFileSync(RSVP_FILE, 'utf8');
-    const rsvps = JSON.parse(data || '[]');
-    const entry = { ...req.body, timestamp: new Date().toISOString() };
-    rsvps.push(entry);
-    fs.writeFileSync(RSVP_FILE, JSON.stringify(rsvps, null, 2));
-    console.log('New RSVP:', entry.name, '|', entry.attending);
-    res.json({ success: true, message: "RSVP received!" });
+    const { data, error } = await supabase
+      .from('rsvps')
+      .insert([{ ...req.body, timestamp: new Date().toISOString() }]);
+    
+    if (error) throw error;
+    res.json({ success: true });
   } catch (err) {
-    console.error('RSVP Error:', err);
+    console.error(err);
     res.status(500).json({ error: 'Failed to save RSVP' });
   }
 });
 
-app.get('/api/rsvps', (req, res) => {
-  // Simple passkey security: babyshower2026
+app.get('/api/rsvps', async (req, res) => {
   if (req.query.key !== 'babyshower2026') return res.status(401).json({ error: 'Unauthorized' });
   try {
-    const data = fs.readFileSync(RSVP_FILE, 'utf8');
-    const rsvps = JSON.parse(data || '[]');
-    res.json({ count: rsvps.length, rsvps });
+    const { data, error } = await supabase.from('rsvps').select('*');
+    if (error) throw error;
+    res.json({ count: data.length, rsvps: data });
   } catch (err) {
-    res.status(500).json({ error: 'Failed to read RSVPs' });
+    res.status(500).json({ error: 'Failed to fetch RSVPs' });
   }
 });
 
 const PORT = process.env.PORT || 3333;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🎊 Baby Shower site running on port ${PORT}`);
-    console.log(`📂 Data stored in: ${RSVP_FILE}`);
 });
