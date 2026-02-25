@@ -7,9 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
   <!-- Font Awesome Pro-grade for Professional Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-  <!-- GSAP for Smooth Professional Motion -->
+  <!-- GSAP and html2canvas for Ticket Generation -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     :root {
       --primary-bg: #fdfaf5; 
@@ -636,12 +637,22 @@
             </div>
             <div class="ticket-body">
               <p style="font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--gold); margin-bottom: 0.5rem;" id="ticket-name">Guest Name</p>
-              <p style="font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;">Reservation Confirmed</p>
-              <div style="margin: 1.5rem 0; font-size: 2rem;">🎞️</div>
+              <p style="font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; margin-bottom: 1rem;">Reservation Confirmed</p>
+              
+              <div style="border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 1rem 0; margin: 1rem 0; font-size: 0.9rem; text-align: left;">
+                <p><strong>📍 VENUE:</strong> Nuvo Event Space</p>
+                <p style="margin-top: 0.3rem; opacity: 0.7; font-size: 0.8rem;">7920 Mississauga Rd, Brampton, ON</p>
+                <p style="margin-top: 0.8rem;"><strong>⏰ TIME:</strong> 11:00 AM - April 26, 2026</p>
+              </div>
+
+              <div style="margin: 1rem 0; font-size: 1.5rem;">🎞️</div>
               <p style="font-style: italic; font-size: 1.1rem;">"See you on the set!"</p>
             </div>
             <div class="ticket-footer">
-              <p>APRIL 26, 2026 · BRAMPTON</p>
+              <div id="ticket-actions" style="display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1rem;">
+                <button type="button" onclick="downloadTicket()" style="background: var(--gold); border: none; padding: 0.5rem 1rem; color: #fff; font-family: 'Bebas Neue'; cursor: pointer; border-radius: 2px;">Download Ticket</button>
+                <button type="button" onclick="addToCalendar()" style="background: #333; border: none; padding: 0.5rem 1rem; color: #fff; font-family: 'Bebas Neue'; cursor: pointer; border-radius: 2px;">Add to Calendar</button>
+              </div>
               <div class="ticket-stub">#AVANIRUPAM2026</div>
             </div>
           </div>
@@ -788,6 +799,38 @@ document.getElementById('rsvp-form').addEventListener('submit', async function(e
       btn.textContent = "✦ CONFIRM RSVP ✦";
   }
 });
+
+// ─── TICKET ACTIONS ───
+async function downloadTicket() {
+    const ticket = document.querySelector('.ticket');
+    const actions = document.getElementById('ticket-actions');
+    actions.style.display = 'none'; // Hide buttons for photo
+    
+    const canvas = await html2canvas(ticket, {
+        backgroundColor: null,
+        scale: 2
+    });
+    
+    actions.style.display = 'flex'; // Bring them back
+    
+    const link = document.createElement('a');
+    link.download = `baby-shower-ticket-${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+}
+
+function addToCalendar() {
+    const event = {
+        title: "Avani & Rupam's Baby Shower 🎊",
+        start: "20260426T110000",
+        end: "20260426T143000",
+        location: "Nuvo Event Space, 7920 Mississauga Rd, Brampton, ON",
+        description: "Join us for the big premiere! Traditional attire requested."
+    };
+    
+    const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
+    window.open(url, '_blank');
+}
 </script>
 </body>
 </html>
