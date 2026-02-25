@@ -345,6 +345,57 @@
     }
     .footer-names { font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--gold); margin-bottom: 0.8rem; }
     
+    /* ── DIGITAL TICKET ── */
+    #ticket-container {
+      display: none;
+      perspective: 1000px;
+      margin-top: 3rem;
+    }
+    .ticket {
+      background: #fff;
+      max-width: 400px;
+      margin: 0 auto;
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .ticket-header {
+      background: var(--text-main);
+      color: #fff;
+      padding: 1.5rem;
+      text-align: center;
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.2em;
+    }
+    .ticket-body {
+      padding: 2rem;
+      text-align: center;
+      border-bottom: 2px dashed #eee;
+      position: relative;
+    }
+    .ticket-body::before, .ticket-body::after {
+      content: ''; position: absolute; bottom: -12px; width: 24px; height: 24px; background: var(--primary-bg); border-radius: 50%; border: 1px solid #eee;
+    }
+    .ticket-body::before { left: -13px; }
+    .ticket-body::after { right: -13px; }
+    
+    .ticket-footer {
+      padding: 1.5rem;
+      text-align: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.2rem;
+      color: var(--gold);
+    }
+    .ticket-stub {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      opacity: 0.5;
+      margin-top: 1rem;
+    }
+
     @media (max-width: 768px) {
       section { padding: 3rem 0; }
       #hero { min-height: 70vh; }
@@ -357,6 +408,9 @@
   </style>
 </head>
 <body>
+
+<div id="spotlight"></div>
+<div class="light-leak"></div>
 
 <!-- Film Leader -->
 <div id="film-leader">
@@ -574,6 +628,25 @@
           </div>
           <button type="submit" class="submit-btn" id="s-btn">✦ CONFIRM RSVP ✦</button>
         </form>
+        <div id="ticket-container" class="gsap-reveal">
+          <div class="ticket">
+            <div class="ticket-header">
+              <h3 style="font-size: 1.8rem;">ADMIT ONE</h3>
+              <p style="font-size: 0.8rem; opacity: 0.7;">A UNIVERSE PRODUCTION</p>
+            </div>
+            <div class="ticket-body">
+              <p style="font-family: 'Dancing Script', cursive; font-size: 2.5rem; color: var(--gold); margin-bottom: 0.5rem;" id="ticket-name">Guest Name</p>
+              <p style="font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;">Reservation Confirmed</p>
+              <div style="margin: 1.5rem 0; font-size: 2rem;">🎞️</div>
+              <p style="font-style: italic; font-size: 1.1rem;">"See you on the set!"</p>
+            </div>
+            <div class="ticket-footer">
+              <p>APRIL 26, 2026 · BRAMPTON</p>
+              <div class="ticket-stub">#AVANIRUPAM2026</div>
+            </div>
+          </div>
+          <p style="text-align:center; margin-top: 2rem; font-family: 'Cormorant Garamond'; font-style: italic; opacity: 0.6;">A digital copy of your reservation.</p>
+        </div>
         <div id="form-response" style="display:none; text-align:center; font-family:'Dancing Script'; font-size: 3rem; color: var(--gold); padding: 4rem 0;">
             See you on the set! 🎊
         </div>
@@ -638,6 +711,30 @@ window.addEventListener('load', () => {
             scrub: true
         }
     });
+
+    // ─── DESKTOP CURSOR SPOTLIGHT ───
+    const spotlight = document.getElementById('spotlight');
+    if (window.innerWidth > 768) {
+        spotlight.style.display = 'block';
+        window.addEventListener('mousemove', e => {
+            gsap.to(spotlight, {
+                background: `radial-gradient(circle at ${e.clientX}px ${e.clientY}px, rgba(197, 160, 89, 0.12) 0%, transparent 35%)`,
+                duration: 0.5,
+                ease: "power2.out"
+            });
+        });
+    }
+
+    // ─── CARD FOCUS EFFECT ───
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            gsap.to(card, { scale: 1.02, duration: 0.4, ease: "power2.out" });
+        });
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, { scale: 1, duration: 0.4, ease: "power2.out" });
+        });
+    });
 });
 
 // ─── COUNTDOWN ───
@@ -671,11 +768,14 @@ document.getElementById('rsvp-form').addEventListener('submit', async function(e
           body: JSON.stringify(data) 
       }); 
       if(res.ok) {
+          document.getElementById('ticket-name').textContent = data.name;
           gsap.to(this, { opacity:0, y:-20, duration:0.5, onComplete: () => {
               this.style.display = 'none';
-              const resp = document.getElementById('form-response');
-              resp.style.display = 'block';
-              gsap.from(resp, { opacity:0, scale:0.8, duration:1, ease:"back.out" });
+              const ticket = document.getElementById('ticket-container');
+              ticket.style.display = 'block';
+              gsap.fromTo(ticket, { opacity:0, scale:0.8, rotateX: -20 }, { 
+                opacity:1, scale:1, rotateX: 0, duration:1.2, ease:"back.out(1.2)" 
+              });
           }});
       } else {
           alert("Error sending RSVP. Please try again.");
