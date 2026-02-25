@@ -925,10 +925,9 @@ document.getElementById('rsvp-form').addEventListener('submit', async function(e
   if (data.email && emailRegex.test(data.email)) {
       guestConfirmation = {
           access_key: "66d55e46-9ed0-41c1-8ef3-20b1455bd6c0",
-          to: data.email, // Explicitly target guest
+          email: data.email, // This is the guest's email address
           subject: "🎬 Your Ticket: Avani & Rupam's Baby Shower",
           from_name: "Avani & Rupam",
-          cc: "rupampatel2006@gmail.com", // You get a copy too
           message: `
 ⭐ ADMIT ${data.guests || 1} ⭐
 Reservation Confirmed for: ${data.name}
