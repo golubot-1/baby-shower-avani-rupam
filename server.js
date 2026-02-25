@@ -24,7 +24,15 @@ app.post('/api/rsvp', async (req, res) => {
   try {
     const { error } = await supabase
       .from('rsvps')
-      .insert([{ ...req.body, timestamp: new Date().toISOString() }]);
+      .insert([{ 
+        name: req.body.name,
+        attending: req.body.attending,
+        guests: req.body.guests,
+        prediction: req.body.prediction,
+        message: req.body.message,
+        email: req.body.email,
+        timestamp: new Date().toISOString() 
+      }]);
     
     if (error) throw error;
 
