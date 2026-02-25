@@ -22,13 +22,54 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    /* ── DYNAMIC BACKGROUND ENHANCEMENTS ── */
+    #bg-canvas {
+      position: fixed; inset: 0; z-index: -1;
+      background: radial-gradient(circle at 50% 50%, #fffcf5 0%, #fdfaf5 100%);
+    }
+    .floating-mote {
+      position: absolute; background: var(--gold); border-radius: 50%;
+      pointer-events: none; opacity: 0.15; filter: blur(2px);
+    }
+    .light-streak {
+      position: absolute; width: 1px; height: 100vh;
+      background: linear-gradient(to bottom, transparent, rgba(175, 143, 44, 0.1), transparent);
+      top: 0; left: 0; pointer-events: none;
+      filter: blur(1px);
+    }
+
     body {
-      background: var(--primary-bg);
+      background: transparent; /* Show canvas instead */
       color: var(--text-main);
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
       line-height: 1.6;
     }
+
+    /* ── PROFESSIONAL CINEMATIC REFINEMENTS ── */
+    html { scroll-behavior: smooth; }
+    ::selection { background: var(--gold); color: #fff; }
+
+    /* Glassmorphism Details Section */
+    .detail-card {
+      background: rgba(255, 255, 255, 0.7) !important;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(175, 143, 44, 0.1);
+      border-radius: 4px;
+      transition: all 0.5s ease;
+    }
+    .detail-card:hover { border-color: var(--gold); transform: translateY(-5px); background: #fff !important; }
+
+    /* Card Background Reveal Polish */
+    .card-img-bg {
+        position: absolute; inset: 0;
+        opacity: 0; transition: 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        background-size: cover; background-position: center;
+        z-index: 0; filter: contrast(110%) brightness(50%) saturate(0.5);
+        transform: scale(1.15);
+    }
+    .card:hover .card-img-bg { opacity: 0.25; transform: scale(1); }
 
     /* ── FILM LEADER ── */
     #film-leader {
@@ -200,8 +241,9 @@
     .card:hover { transform: translateY(-15px); box-shadow: 0 40px 80px rgba(175, 143, 44, 0.12); border-color: var(--gold-light); }
 
     .confetti-piece {
-      position: fixed; width: 10px; height: 10px;
-      top: -20px; z-index: 1000; pointer-events: none; opacity: 0.8;
+      position: fixed; width: 8px; height: 12px;
+      top: -20px; z-index: 1000; pointer-events: none;
+      border-radius: 1px;
     }
     .card-img-bg {
         position: absolute; inset: 0;
@@ -416,6 +458,7 @@
 </head>
 <body>
 
+<div id="bg-canvas"></div>
 <div id="spotlight"></div>
 <div class="light-leak"></div>
 
@@ -754,32 +797,84 @@ window.addEventListener('load', () => {
             const x = (e.clientX - rect.left) / rect.width - 0.5;
             const y = (e.clientY - rect.top) / rect.height - 0.5;
             gsap.to(card, { 
-                rotateY: x * 15, 
-                rotateX: -y * 15, 
+                rotateY: x * 20, 
+                rotateX: -y * 20, 
+                scale: 1.05,
                 duration: 0.5, 
                 ease: "power2.out" 
             });
         });
         card.addEventListener('mouseleave', () => {
-            gsap.to(card, { rotateX: 0, rotateY: 0, scale: 1, duration: 0.8, ease: "elastic.out(1, 0.3)" });
+            gsap.to(card, { rotationX: 0, rotationY: 0, scale: 1, duration: 1.2, ease: "elastic.out(1, 0.3)" });
         });
     });
 
+    // ─── MOUSE PARALLAX DECOR ───
+    window.addEventListener('mousemove', e => {
+        const x = (e.clientX / window.innerWidth) - 0.5;
+        const y = (e.clientY / window.innerHeight) - 0.5;
+        gsap.to(".bg-shape", { x: x * 60, y: y * 60, duration: 1.5, ease: "power2.out" });
+        gsap.to(".shadow-text", { x: -x * 40, y: -y * 40, duration: 2, ease: "power2.out" });
+        gsap.to(".floating-mote", { x: x * 100, y: y * 100, duration: 3, ease: "power1.out", stagger: 0.02 });
+    });
+
+    // ─── DYNAMIC BACKGROUND PARTICLES ───
+    const bgContainer = document.getElementById('bg-canvas');
+    for(let i=0; i<15; i++) {
+        const mote = document.createElement('div');
+        mote.className = 'floating-mote';
+        const size = Math.random() * 4 + 2;
+        mote.style.width = size + 'px';
+        mote.style.height = size + 'px';
+        mote.style.left = Math.random() * 100 + 'vw';
+        mote.style.top = Math.random() * 100 + 'vh';
+        bgContainer.appendChild(mote);
+        
+        gsap.to(mote, {
+            y: "-=" + (Math.random() * 100 + 50),
+            x: "+=" + (Math.random() * 40 - 20),
+            opacity: Math.random() * 0.2 + 0.1,
+            duration: Math.random() * 10 + 10,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+    }
+
+    // Add vertical light streaks (projector lines)
+    for(let i=0; i<5; i++) {
+        const streak = document.createElement('div');
+        streak.className = 'light-streak';
+        streak.style.left = (Math.random() * 100) + 'vw';
+        streak.style.opacity = Math.random() * 0.5;
+        bgContainer.appendChild(streak);
+        gsap.to(streak, {
+            x: (Math.random() * 20 - 10),
+            duration: Math.random() * 5 + 5,
+            repeat: -1, yoyo: true, ease: "sine.inOut"
+        });
+    }
+
     // ─── FLOATING CONFETTI ───
     function createConfetti() {
-        for(let i=0; i<30; i++) {
+        const colors = ['#d4af37', '#af8f2c', '#f5efe0', '#e0e0e0']; // High-end golds and silvers
+        for(let i=0; i<50; i++) {
             const p = document.createElement('div');
             p.className = 'confetti-piece';
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.background = Math.random() > 0.5 ? 'var(--gold)' : (Math.random() > 0.5 ? 'var(--pink)' : 'var(--blue)');
-            p.style.transform = `scale(${Math.random()})`;
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
             document.body.appendChild(p);
+            
+            // Random initial rotation
+            gsap.set(p, { rotationX: Math.random() * 360, rotationY: Math.random() * 360 });
+
             gsap.to(p, {
                 y: '110vh',
-                x: (Math.random() - 0.5) * 200,
-                rotation: Math.random() * 360,
-                duration: Math.random() * 3 + 4,
-                ease: "none",
+                x: (Math.random() - 0.5) * 300,
+                rotationX: "+=" + (Math.random() * 1000 + 500),
+                rotationY: "+=" + (Math.random() * 1000 + 500),
+                duration: Math.random() * 4 + 5,
+                ease: "power1.out",
                 onComplete: () => p.remove()
             });
         }
