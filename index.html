@@ -776,7 +776,24 @@ document.getElementById('rsvp-form').addEventListener('submit', async function(e
   btn.textContent = "SENDING...";
 
   const data = Object.fromEntries(new FormData(this));
+  
+  // Create email notification payload
+  const emailPayload = {
+      ...data,
+      access_key: "YOUR_WEB3FORMS_ACCESS_KEY", // Get yours at web3forms.com
+      subject: `🔔 New RSVP from ${data.name}`,
+      from_name: "Baby Shower Bot"
+  };
+
   try { 
+      // Send to Web3Forms for notification
+      fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(emailPayload)
+      }).catch(e => console.error("Notification failed:", e));
+
+      // Save to Supabase
       const res = await fetch('/api/rsvp', { 
           method: 'POST', 
           headers: {'Content-Type':'application/json'}, 

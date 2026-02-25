@@ -2,17 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const { createClient } = require('@supabase/supabase-js');
 const path = require('path');
-const sgMail = require('@sendgrid/mail');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static(__dirname));
-
-// SENDGRID CONFIG (Set this in your Vercel/Environment Variables)
-if (process.env.SENDGRID_API_KEY) {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
 
 // SUPABASE CONFIG
 const supabaseUrl = 'https://lgcqmvrgpnfnyqvjqxab.supabase.co';
@@ -23,7 +17,7 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 
 app.post('/api/rsvp', async (req, res) => {
-  const { name, attending, email } = req.body;
+  const { name, attending } = req.body;
   if (!name || !attending) {
       return res.status(400).json({ error: "Invalid data" });
   }
@@ -33,40 +27,6 @@ app.post('/api/rsvp', async (req, res) => {
       .insert([{ ...req.body, timestamp: new Date().toISOString() }]);
     
     if (error) throw error;
-
-    // Send Confirmation Email if provided and API key exists
-    if (email && process.env.SENDGRID_API_KEY) {
-        const msg = {
-            to: email,
-            from: 'confirmations@yourdomain.com', // MUST be a verified sender in SendGrid
-            subject: "🎬 You're on the Guest List: Avani & Rupam's Baby Shower",
-            html: `
-              <div style="font-family: serif; max-width: 500px; margin: auto; border: 1px solid #af8f2c; padding: 40px; text-align: center; background-color: #fdfaf5;">
-                <h1 style="font-family: 'Cinzel', serif; color: #1a1a1a; letter-spacing: 2px;">ADMIT ONE</h1>
-                <p style="text-transform: uppercase; letter-spacing: 3px; font-size: 10px; color: #af8f2c;">A Universe Production</p>
-                <hr style="border: 0; border-top: 1px dashed #ccc; margin: 30px 0;">
-                <p style="font-style: italic; font-size: 18px;">Reservation Confirmed for</p>
-                <h2 style="font-size: 24px; margin: 10px 0;">${name}</h2>
-                <div style="text-align: left; background: #fff; padding: 20px; border: 1px solid #eee; margin: 20px 0;">
-                    <p><strong>📍 VENUE:</strong> Nuvo Event Space</p>
-                    <p style="margin-left: 25px; opacity: 0.8;">7920 Mississauga Rd, Brampton, ON</p>
-                    <p style="margin-top: 15px;"><strong>⏰ TIME:</strong> 11:00 AM · April 26, 2026</p>
-                </div>
-                <p style="font-size: 14px; margin-top: 30px;"><em>"See you on the set!"</em></p>
-              </div>
-            `
-        };
-        sgMail.send(msg).catch(err => console.error("SendGrid Guest Error:", err.message));
-
-        // Proactive Notification to Raju
-        const adminMsg = {
-          to: 'rupampatel2006@gmail.com',
-          from: 'confirmations@yourdomain.com', // Same verified sender
-          subject: `🔔 New RSVP: ${name}`,
-          text: `New RSVP received from ${name} (${email || 'No email'}).\nAttending: ${attending}\nGuests: ${req.body.guests}\nPrediction: ${req.body.prediction}\nMessage: ${req.body.message}`,
-        };
-        sgMail.send(adminMsg).catch(err => console.error("SendGrid Admin Error:", err.message));
-    }
 
     res.json({ success: true });
   } catch (err) {
