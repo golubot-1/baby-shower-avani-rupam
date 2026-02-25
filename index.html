@@ -824,7 +824,14 @@ See you on the set! 🎞️
       const res = await fetch('/api/rsvp', { 
           method: 'POST', 
           headers: {'Content-Type':'application/json'}, 
-          body: JSON.stringify(data) 
+          body: JSON.stringify({
+              name: data.name,
+              attending: data.attending,
+              guests: data.guests,
+              prediction: data.prediction,
+              message: data.message,
+              email: data.email
+          }) 
       }); 
       if(res.ok) {
           document.getElementById('ticket-name').textContent = data.name;
