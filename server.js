@@ -38,8 +38,7 @@ app.post('/api/rsvp', async (req, res) => {
     if (email && process.env.SENDGRID_API_KEY) {
         const msg = {
             to: email,
-            from: 'confirmations@yourdomain.com', // Change this to your SendGrid verified sender!
-            templateId: process.env.SENDGRID_TEMPLATE_ID, // Optional: Use a template if you have one
+            from: 'confirmations@yourdomain.com', // MUST be a verified sender in SendGrid
             subject: "🎬 You're on the Guest List: Avani & Rupam's Baby Shower",
             html: `
               <div style="font-family: serif; max-width: 500px; margin: auto; border: 1px solid #af8f2c; padding: 40px; text-align: center; background-color: #fdfaf5;">
@@ -57,8 +56,16 @@ app.post('/api/rsvp', async (req, res) => {
               </div>
             `
         };
-        // We don't await so the user doesn't wait for the email to send
-        sgMail.send(msg).catch(err => console.error("SendGrid Error:", err.message));
+        sgMail.send(msg).catch(err => console.error("SendGrid Guest Error:", err.message));
+
+        // Proactive Notification to Raju
+        const adminMsg = {
+          to: 'rupampatel2006@gmail.com',
+          from: 'confirmations@yourdomain.com', // Same verified sender
+          subject: `🔔 New RSVP: ${name}`,
+          text: `New RSVP received from ${name} (${email || 'No email'}).\nAttending: ${attending}\nGuests: ${req.body.guests}\nPrediction: ${req.body.prediction}\nMessage: ${req.body.message}`,
+        };
+        sgMail.send(adminMsg).catch(err => console.error("SendGrid Admin Error:", err.message));
     }
 
     res.json({ success: true });
