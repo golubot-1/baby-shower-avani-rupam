@@ -920,20 +920,28 @@ document.getElementById('rsvp-form').addEventListener('submit', async function(e
 
   // Create confirmation payload for Guest
   let guestConfirmation = null;
-  if (data.email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  if (data.email && emailRegex.test(data.email)) {
       guestConfirmation = {
           access_key: "66d55e46-9ed0-41c1-8ef3-20b1455bd6c0",
-          email: data.email, // Send TO the guest
+          email: data.email,
           subject: "🎬 Your Ticket: Avani & Rupam's Baby Shower",
           from_name: "Avani & Rupam",
           message: `
-Your RSVP is confirmed! We can't wait to see you at Avani & Rupam's Baby Shower.
+⭐ ADMIT ${data.guests || 1} ⭐
+Reservation Confirmed for: ${data.name}
+
+We are so excited to have you join our private screening!
 
 📍 VENUE: Nuvo Event Space
 7920 Mississauga Rd, Brampton, ON
 ⏰ TIME: 11:00 AM · Sunday, April 26, 2026
 
-See you on the set! 🎞️
+DRESS CODE: Traditional / Indo-Western
+
+Please keep this email for your records.
+See you on the set! 🎞️✨
           `
       };
   }
