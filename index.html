@@ -195,8 +195,14 @@
       transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
       position: relative;
       overflow: hidden;
+      perspective: 1000px;
     }
-    .card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(175, 143, 44, 0.08); border-color: var(--gold-light); }
+    .card:hover { transform: translateY(-15px); box-shadow: 0 40px 80px rgba(175, 143, 44, 0.12); border-color: var(--gold-light); }
+
+    .confetti-piece {
+      position: fixed; width: 10px; height: 10px;
+      top: -20px; z-index: 1000; pointer-events: none; opacity: 0.8;
+    }
     .card-img-bg {
         position: absolute; inset: 0;
         opacity: 0; transition: 0.5s;
@@ -743,13 +749,44 @@ window.addEventListener('load', () => {
     // ─── CARD FOCUS EFFECT ───
     const cards = document.querySelectorAll('.card');
     cards.forEach(card => {
-        card.addEventListener('mouseenter', () => {
-            gsap.to(card, { scale: 1.02, duration: 0.4, ease: "power2.out" });
+        card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            gsap.to(card, { 
+                rotateY: x * 15, 
+                rotateX: -y * 15, 
+                duration: 0.5, 
+                ease: "power2.out" 
+            });
         });
         card.addEventListener('mouseleave', () => {
-            gsap.to(card, { scale: 1, duration: 0.4, ease: "power2.out" });
+            gsap.to(card, { rotateX: 0, rotateY: 0, scale: 1, duration: 0.8, ease: "elastic.out(1, 0.3)" });
         });
     });
+
+    // ─── FLOATING CONFETTI ───
+    function createConfetti() {
+        for(let i=0; i<30; i++) {
+            const p = document.createElement('div');
+            p.className = 'confetti-piece';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.background = Math.random() > 0.5 ? 'var(--gold)' : (Math.random() > 0.5 ? 'var(--pink)' : 'var(--blue)');
+            p.style.transform = `scale(${Math.random()})`;
+            document.body.appendChild(p);
+            gsap.to(p, {
+                y: '110vh',
+                x: (Math.random() - 0.5) * 200,
+                rotation: Math.random() * 360,
+                duration: Math.random() * 3 + 4,
+                ease: "none",
+                onComplete: () => p.remove()
+            });
+        }
+    }
+    // Occasional bursts
+    setInterval(createConfetti, 8000);
+    createConfetti();
 });
 
 // ─── COUNTDOWN ───

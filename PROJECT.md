@@ -9,8 +9,9 @@
 - **Hosting:** Vercel (Production - currently on older version)
 
 ### 📜 Development Rules
-1. **Local First:** Always run and verify on `localhost:3333` before pushing to GitHub or Vercel.
-2. **Current Mode:** Local-only development. New animations and cinematic images added to `index.html` are NOT pushed to Vercel until approved by Raju.
+1. **Local First:** Always run and verify on `localhost:3333`.
+2. **Explicit Push Only:** Do NOT push to GitHub or Vercel unless Raju explicitly says "Push" or "Commit and Push".
+3. **Current Mode:** Local-only development. New animations and cinematic images added to `index.html` are NOT pushed to Vercel until approved by Raju.
 3. **UI Preservation:** The "Cinematic / A Universe Production" theme is the base.
 4. **Data Integrity:** All RSVP data must live in Supabase. Do not revert to local `rsvps.json` storage.
 5. **Admin Security:** The Admin Panel must remain at `/admin` and use the persistent key `babyshower2026`.
