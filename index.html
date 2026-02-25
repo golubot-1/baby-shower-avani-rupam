@@ -771,10 +771,13 @@ window.addEventListener('load', () => {
 // ─── FORM ───
 document.getElementById('rsvp-form').addEventListener('submit', async function(e){
   e.preventDefault();
+  const form = this;
   const btn = document.getElementById('s-btn');
   btn.disabled = true;
   btn.textContent = "SENDING...";
 
+  const data = Object.fromEntries(new FormData(form));
+  
   // Create notification payload for Raju (Admin)
   const rajuNotification = {
       access_key: "66d55e46-9ed0-41c1-8ef3-20b1455bd6c0",
@@ -835,8 +838,8 @@ See you on the set! 🎞️
       }); 
       if(res.ok) {
           document.getElementById('ticket-name').textContent = data.name;
-          gsap.to(this, { opacity:0, y:-20, duration:0.5, onComplete: () => {
-              this.style.display = 'none';
+          gsap.to(form, { opacity:0, y:-20, duration:0.5, onComplete: () => {
+              form.style.display = 'none';
               const ticket = document.getElementById('ticket-container');
               ticket.style.display = 'block';
               gsap.fromTo(ticket, { opacity:0, scale:0.8, rotateX: -20 }, { 
