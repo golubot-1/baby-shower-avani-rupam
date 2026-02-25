@@ -159,6 +159,8 @@
       text-transform: uppercase;
       margin-bottom: 1rem;
       opacity: 0.8;
+      text-align: center;
+      display: block;
     }
     .section-title {
       font-family: 'Cinzel Decorative', serif;
@@ -203,8 +205,8 @@
     .card:hover .card-img-bg { opacity: 0.15; }
     .card-content { position: relative; z-index: 1; }
 
-    .card-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; filter: grayscale(1); transition: 0.3s; color: var(--gold); }
-    .card:hover .card-icon { filter: grayscale(0); transform: scale(1.1); }
+    .card-icon { font-size: 2.5rem; margin-bottom: 1rem; display: block; filter: none; transition: 0.3s; }
+    .card:hover .card-icon { transform: scale(1.1); }
     .card-title {
       font-family: 'Cinzel Decorative', serif;
       font-size: 0.9rem;
@@ -298,30 +300,40 @@
     }
     .detail-value { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; line-height: 1.4; font-weight: 500; }
 
-    /* ── RSVP ── */
-    #rsvp { text-align: center; background: var(--primary-bg); padding: 5rem 0; }
+    /* ── RSVP MODERNIZED ── */
+    #rsvp { text-align: center; background: var(--primary-bg); padding: 6rem 0; }
     .rsvp-box {
-      background: transparent;
-      max-width: 550px;
-      margin: 2.5rem auto 0;
+      background: #fff;
+      max-width: 650px;
+      margin: 3rem auto 0;
       text-align: left;
+      padding: 3rem;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.03);
+      border-radius: 8px;
     }
-    .form-group { margin-bottom: 1.5rem; }
-    .form-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 600; margin-bottom: 0.8rem; display: block; color: #555; }
+    .form-group { margin-bottom: 2rem; }
+    .form-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 700; margin-bottom: 0.8rem; display: block; color: var(--gold); }
     .form-input, .form-select, .form-textarea { 
-      width: 100%; border: none; border-bottom: 1px solid #ccc; padding: 0.8rem 0; 
-      font-family: inherit; font-size: 1rem; outline: none; transition: border-color 0.3s;
-      background: transparent;
+      width: 100%; border: 1px solid #eee; padding: 1rem 1.2rem; 
+      font-family: inherit; font-size: 1rem; outline: none; transition: all 0.3s;
+      background: #fafafb;
+      border-radius: 4px;
     }
-    .form-input:focus { border-bottom-color: var(--gold); }
-    .radio-group { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 0.8rem; }
-    .radio-option { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.95rem; }
+    .form-input:focus { border-color: var(--gold); background: #fff; box-shadow: 0 4px 12px rgba(175, 143, 44, 0.08); }
+    .radio-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-top: 0.8rem; }
+    .radio-option { 
+      display: flex; align-items: center; gap: 0.8rem; cursor: pointer; font-size: 0.95rem; 
+      padding: 1rem; border: 1px solid #eee; border-radius: 4px; background: #fafafb;
+      transition: all 0.3s;
+    }
+    .radio-option:hover { border-color: var(--gold-light); }
     .radio-option input { accent-color: var(--gold); width: 1.1rem; height: 1.1rem; }
+    .radio-option:has(input:checked) { border-color: var(--gold); background: #fff; box-shadow: 0 4px 12px rgba(175, 143, 44, 0.05); }
     
     .submit-btn {
-      width: 100%; background: var(--text-main); color: #fff; border: none; padding: 1.5rem;
-      font-family: 'Cinzel Decorative', serif; font-size: 1rem; cursor: pointer; transition: 0.4s;
-      margin-top: 1.5rem; letter-spacing: 0.25em;
+      width: 100%; background: var(--text-main); color: #fff; border: none; padding: 1.2rem;
+      font-family: 'Cinzel Decorative', serif; font-size: 1.1rem; cursor: pointer; transition: 0.4s;
+      margin-top: 1rem; letter-spacing: 0.15em; border-radius: 4px;
     }
     .submit-btn:hover { background: #000; transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
 
@@ -339,7 +351,8 @@
       .battle-arena { grid-template-columns: 1fr; }
       .vs-text { margin: 1rem 0; }
       .timer-grid { gap: 1rem; }
-      .rsvp-box { padding: 0; }
+      .rsvp-box { padding: 2rem 1.5rem; }
+      .radio-group { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -365,12 +378,8 @@
       <div class="container gsap-reveal" style="width: 100px; height: 1px; background: var(--gold); margin: 1.5rem auto; opacity: 0.3;"></div>
       <p class="hero-sub gsap-reveal">Baby Shower · Sunday, April 26 · 2026</p>
       <div class="gender-pills gsap-reveal">
-        <div class="pill pill-pink">
-            <i class="fa-solid fa-venus"></i> &nbsp; Tiny Boss Lady?
-        </div>
-        <div class="pill pill-blue">
-            <i class="fa-solid fa-mars"></i> &nbsp; Little Gentleman?
-        </div>
+        <div class="pill pill-pink">Tiny Boss Lady?</div>
+        <div class="pill pill-blue">Little Gentleman?</div>
       </div>
     </div>
   </section>
@@ -381,9 +390,9 @@
       <p class="act-label gsap-reveal">— Act I —</p>
       <h2 class="section-title gsap-reveal">The Scene</h2>
       <p class="scene-text gsap-reveal">
-        Avani &amp; Rupam are about to trade sleep for diaper duty <i class="fa-solid fa-face-grin-beam-sweat"></i><br/>
+        Avani &amp; Rupam are about to trade sleep for diaper duty 😅<br/>
         and need your love, laughter, and maybe a few parenting tips!<br/>
-        <em>(Don't worry… we'll pretend to listen <i class="fa-solid fa-face-wink-tongue"></i>)</em>
+        <em>(Don't worry… we'll pretend to listen 😉)</em>
       </p>
     </div>
   </section>
@@ -396,36 +405,24 @@
       <h2 class="section-title gsap-reveal">The Plot</h2>
       <div class="cards-grid">
         <div class="card gsap-reveal">
-          <div class="card-img-bg" style="background-image: url('https://images.unsplash.com/photo-1614264627083-d9229fc94e9f?q=80&w=1000&auto=format&fit=crop');"></div>
-          <div class="card-content">
-              <span class="card-icon"><i class="fa-solid fa-dharmachakra"></i></span>
-              <div class="card-title">Simant Ceremony</div>
-              <div class="card-text">Traditional blessings, because culture runs deep — and always steals the show.</div>
-          </div>
+          <span class="card-icon">🪔</span>
+          <div class="card-title">Simant Ceremony</div>
+          <div class="card-text">Traditional blessings, because culture runs deep — and always steals the show.</div>
         </div>
         <div class="card gsap-reveal">
-          <div class="card-img-bg" style="background-image: url('https://images.unsplash.com/photo-1596464716127-f2a82984de30?q=80&w=1000&auto=format&fit=crop');"></div>
-          <div class="card-content">
-              <span class="card-icon"><i class="fa-solid fa-dice"></i></span>
-              <div class="card-title">Games &amp; Giggles</div>
-              <div class="card-text">Competitions, laughs, and a little bit of delightful chaos.</div>
-          </div>
+          <span class="card-icon">🎮</span>
+          <div class="card-title">Games &amp; Giggles</div>
+          <div class="card-text">Competitions, laughs, and a little bit of delightful chaos.</div>
         </div>
         <div class="card gsap-reveal">
-          <div class="card-img-bg" style="background-image: url('https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?q=80&w=1000&auto=format&fit=crop');"></div>
-          <div class="card-content">
-              <span class="card-icon"><i class="fa-solid fa-star-and-crescent"></i></span>
-              <div class="card-title">Gender Reveal!</div>
-              <div class="card-text">The BIG moment. Place your bets. Hold your breath. Expect confetti.</div>
-          </div>
+          <span class="card-icon">🎊</span>
+          <div class="card-title">Gender Reveal!</div>
+          <div class="card-text">The BIG moment. Place your bets. Hold your breath. Expect confetti.</div>
         </div>
         <div class="card gsap-reveal">
-          <div class="card-img-bg" style="background-image: url('https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=1000&auto=format&fit=crop');"></div>
-          <div class="card-content">
-              <span class="card-icon"><i class="fa-solid fa-wine-glass-empty"></i></span>
-              <div class="card-title">Lunch</div>
-              <div class="card-text">A delicious spread to follow. Good food, great company.</div>
-          </div>
+          <span class="card-icon">🍽️</span>
+          <div class="card-title">Lunch</div>
+          <div class="card-text">A delicious spread to follow. Good food, great company.</div>
         </div>
       </div>
     </div>
@@ -438,13 +435,13 @@
       <h2 class="section-title gsap-reveal">The Ultimate Showdown</h2>
       <div class="battle-arena">
         <div class="battle-card battle-pink gsap-reveal">
-          <span class="battle-emoji"><i class="fa-solid fa-person-dress"></i></span>
+          <span class="battle-emoji">💗</span>
           <div class="battle-name" style="color:var(--pink);">Tiny Boss Lady</div>
-          <div class="card-text">Glitter. Giggles. Already running the household from the womb.</div>
+          <div class="card-text">Glitter, giggles, and a heart of gold. Already the star of the show.</div>
         </div>
         <div class="vs-text gsap-reveal">VS</div>
         <div class="battle-card battle-blue gsap-reveal">
-          <span class="battle-emoji"><i class="fa-solid fa-person-tie"></i></span>
+          <span class="battle-emoji">💙</span>
           <div class="battle-name" style="color:var(--blue);">Little Gentleman</div>
           <div class="card-text">Tiny suits. Bigger mischief. Already planning his first escape.</div>
         </div>
@@ -459,22 +456,22 @@
       <h2 class="section-title gsap-reveal">Be There</h2>
       <div class="cards-grid">
         <div class="detail-card gsap-reveal">
-          <span class="detail-icon"><i class="fa-solid fa-calendar-check"></i></span>
+          <span class="detail-icon">🗓</span>
           <div class="detail-label">Date</div>
           <div class="detail-value">Sunday<br/>26th April, 2026</div>
         </div>
         <div class="detail-card gsap-reveal">
-          <span class="detail-icon"><i class="fa-solid fa-hourglass-start"></i></span>
+          <span class="detail-icon">⏰</span>
           <div class="detail-label">Time</div>
           <div class="detail-value">11:00 AM<br/>to 2:30 PM</div>
         </div>
         <div class="detail-card gsap-reveal">
-          <span class="detail-icon"><i class="fa-solid fa-map-location-dot"></i></span>
+          <span class="detail-icon">📍</span>
           <div class="detail-label">Venue</div>
           <div class="detail-value">Nuvo Event Space<br/>7920 Mississauga Rd<br/>Brampton, ON</div>
         </div>
         <div class="detail-card gsap-reveal">
-          <span class="detail-icon"><i class="fa-solid fa-vest"></i></span>
+          <span class="detail-icon">👗</span>
           <div class="detail-label">Dress Code</div>
           <div class="detail-value">Traditional Attire<br/><em style="opacity:0.6; font-size:0.9rem;">Bonus points for colorful vibes!</em></div>
         </div>
@@ -512,7 +509,7 @@
     <div class="container">
       <p class="act-label gsap-reveal">— The Credits —</p>
       <div class="hero-pre gsap-reveal" style="margin-top:2rem;">Starring</div>
-      <div class="footer-names gsap-reveal" style="font-size: 5rem; margin: 1rem 0;">Avani &amp; Rupam <i class="fa-solid fa-heart" style="color:var(--pink);"></i></div>
+      <div class="footer-names gsap-reveal" style="font-size: 5rem; margin: 1rem 0;">Avani &amp; Rupam 💕</div>
       <p class="gsap-reveal" style="font-family:'Cormorant Garamond'; font-size: 1.6rem; font-style: italic; opacity: 0.8; max-width: 600px; margin: 0 auto; line-height: 1.8;">
         Featuring: <strong>YOU</strong><br/>
         Because what's a party without the guests?
@@ -526,7 +523,7 @@
       <p class="act-label gsap-reveal">— Director's Memo —</p>
       <div style="max-width: 700px; margin: 3rem auto 0; line-height: 2;">
         <p class="gsap-reveal" style="font-size: 1.3rem; font-style: italic; border-bottom: 1px solid #f0f0f0; padding-bottom: 2rem;">🎭 Bring your best laughs and expect many baby puns.</p>
-        <p class="gsap-reveal" style="font-size: 1.2rem; padding: 2.5rem 0; color: #555; font-family: 'Cormorant Garamond', serif;">No boxed gifts, please. Your presence is our greatest gift. Should you wish to bless us further, envelope blessings are greatly appreciated. <i class="fa-solid fa-heart" style="color:var(--pink);"></i></p>
+        <p class="gsap-reveal" style="font-size: 1.2rem; padding: 2.5rem 0; color: #555; font-family: 'Cormorant Garamond', serif;">No boxed gifts, please. Your presence is our greatest gift. Should you wish to bless us further, envelope blessings are greatly appreciated. 💕</p>
       </div>
     </div>
   </section>
@@ -548,8 +545,8 @@
           <div class="form-group">
             <label class="form-label">Will You Be Joining Us? *</label>
             <div class="radio-group">
-              <label class="radio-option"><input type="radio" name="attending" value="yes" required/><span><i class="fa-solid fa-hand-holding-heart"></i> &nbsp; Yes, can't wait!</span></label>
-              <label class="radio-option"><input type="radio" name="attending" value="no"/><span><i class="fa-solid fa-face-frown-open"></i> &nbsp; Sadly, no</span></label>
+              <label class="radio-option"><input type="radio" name="attending" value="yes" required/><span>🎉 Yes, can't wait!</span></label>
+              <label class="radio-option"><input type="radio" name="attending" value="no"/><span>😢 Sadly, no</span></label>
             </div>
           </div>
           <div class="form-group">
@@ -564,11 +561,11 @@
             </select>
           </div>
           <div class="form-group">
-            <label class="form-label">Your Gender Reveal Prediction</label>
+            <label class="form-label">Your Gender Reveal Prediction 🔮</label>
             <div class="radio-group">
-                <label class="radio-option"><input type="radio" name="prediction" value="girl"/><span><i class="fa-solid fa-venus"></i> &nbsp; Girl</span></label>
-                <label class="radio-option"><input type="radio" name="prediction" value="boy"/><span><i class="fa-solid fa-mars"></i> &nbsp; Boy</span></label>
-                <label class="radio-option"><input type="radio" name="prediction" value="surprise" checked/><span><i class="fa-solid fa-wand-magic-sparkles"></i> &nbsp; Surprise</span></label>
+                <label class="radio-option"><input type="radio" name="prediction" value="girl"/><span>💗 Girl</span></label>
+                <label class="radio-option"><input type="radio" name="prediction" value="boy"/><span>💙 Boy</span></label>
+                <label class="radio-option"><input type="radio" name="prediction" value="surprise" checked/><span>🎊 Surprise</span></label>
             </div>
           </div>
           <div class="form-group">
@@ -578,7 +575,7 @@
           <button type="submit" class="submit-btn" id="s-btn">✦ CONFIRM RSVP ✦</button>
         </form>
         <div id="form-response" style="display:none; text-align:center; font-family:'Dancing Script'; font-size: 3rem; color: var(--gold); padding: 4rem 0;">
-            See you on the set! <i class="fa-solid fa-champagne-glasses"></i>
+            See you on the set! 🎊
         </div>
       </div>
     </div>
@@ -586,7 +583,11 @@
 </main>
 
 <footer>
-  <div class="footer-names">Avani & Rupam <i class="fa-solid fa-heart" style="color:var(--pink);"></i></div>
+  <div style="margin-bottom: 2rem; opacity: 0.8;">
+    <p style="font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem;">Invitee</p>
+    <p style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 600;">Manharbhai & Shardaben Vaghasia</p>
+  </div>
+  <div class="footer-names">Avani & Rupam 💕</div>
   <p style="font-size: 0.85rem; letter-spacing: 0.3em; opacity: 0.4;">BABY SHOWER · APRIL 26, 2026 · BRAMPTON</p>
 </footer>
 
