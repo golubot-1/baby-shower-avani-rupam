@@ -585,6 +585,7 @@
 
     /* ── CAST ── */
     #cast { background: var(--primary-bg); }
+    .cast-names { font-size: clamp(2.5rem, 10vw, 5rem); margin: 1rem 0; }
 
     /* ── MEMO ── */
     .memo-card {
@@ -683,26 +684,59 @@
     .scroll-top:hover { background: #fff; box-shadow: var(--shadow-md); transform: translateY(-3px); }
 
     @media (max-width: 768px) {
-      section { padding: 4rem 0; }
-      #hero { min-height: 80vh; }
-      .hero-title { font-size: clamp(2.5rem, 12vw, 4rem); }
-      .battle-arena { grid-template-columns: 1fr; gap: 1rem; }
-      .vs-text { margin: 0.5rem 0; font-size: 2.5rem; }
-      .timer-grid { gap: 0.8rem; }
-      .timer-block { min-width: 72px; padding: 1.2rem 0.8rem; border-radius: var(--radius-sm); }
-      .rsvp-box { padding: 2rem 1.5rem; border-radius: var(--radius-md); }
-      .radio-group { grid-template-columns: 1fr; }
-      .cards-grid { gap: 1rem; }
-      .card { border-radius: var(--radius-sm); padding: 2.2rem 1.5rem; }
-      .battle-card { border-radius: var(--radius-md); padding: 2.5rem 1.5rem; }
-      .detail-card { border-radius: var(--radius-sm); }
-      .hero-divider { width: 60px; }
-      .section-divider::before, .section-divider::after { width: 40px; }
+      section { padding: 3.5rem 0; }
+      #hero { min-height: 80vh; padding: 2rem 0; }
+      .hero-pre { font-size: 0.65rem; letter-spacing: 0.4em; margin-bottom: 1.2rem; }
+      .hero-title { font-size: clamp(2.2rem, 11vw, 3.5rem); line-height: 1; }
+      .hero-amp { font-size: 0.45em; margin: 0 0.2rem; }
+      .hero-sub { font-size: 1.15rem; }
+      .hero-divider { width: 50px; margin: 1.5rem auto; }
+      .gender-pills { gap: 0.8rem; margin-top: 2rem; }
+      .pill { padding: 0.55rem 1.3rem; font-size: 0.65rem; letter-spacing: 0.12em; }
+      .container { padding: 0 1.2rem; }
+      .section-divider::before, .section-divider::after { width: 35px; }
+      .section-title { font-size: clamp(1.5rem, 6vw, 2rem); margin-bottom: 1.5rem; }
+      .act-label { font-size: 0.6rem; letter-spacing: 0.4em; }
+      .scene-text { font-size: 1.2rem; line-height: 1.7; }
+      .cards-grid { grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+      .card { border-radius: var(--radius-sm); padding: 1.8rem 1.2rem; }
+      .card-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+      .card-title { font-size: 0.72rem; letter-spacing: 0.08em; }
+      .card-text { font-size: 1rem; }
+      .battle-arena { grid-template-columns: 1fr; gap: 0.8rem; }
+      .battle-card { border-radius: var(--radius-md); padding: 2rem 1.5rem; }
+      .battle-emoji { font-size: 3rem; margin-bottom: 1rem; }
+      .battle-name { font-size: 1rem; }
+      .vs-text { margin: 0.3rem 0; font-size: 2rem; }
+      #details .cards-grid { grid-template-columns: 1fr 1fr; }
+      .detail-card { border-radius: var(--radius-sm); padding: 1.8rem 1rem; }
+      .detail-icon { font-size: 1.8rem; margin-bottom: 0.8rem; }
+      .detail-label { font-size: 0.55rem; letter-spacing: 0.3em; }
+      .detail-value { font-size: 1.05rem; }
+      #countdown { padding: 4rem 0; background-attachment: scroll; }
+      .timer-grid { gap: 0.6rem; margin-top: 2rem; }
+      .timer-block { min-width: 0; flex: 1; padding: 1.2rem 0.6rem; border-radius: var(--radius-sm); }
+      .timer-num { font-size: clamp(1.8rem, 8vw, 2.5rem); }
+      .timer-label { font-size: 0.5rem; letter-spacing: 0.2em; }
+      .rsvp-box { padding: 2rem 1.2rem; border-radius: var(--radius-md); }
+      .radio-group { grid-template-columns: 1fr; gap: 0.6rem; }
+      .form-input, .form-select, .form-textarea { padding: 0.85rem 1rem; font-size: 0.9rem; }
+      .form-label { font-size: 0.65rem; }
+      .submit-btn { padding: 1.1rem; font-size: 0.85rem; letter-spacing: 0.15em; }
       .memo-card { padding: 2rem 1.5rem; border-radius: var(--radius-md); }
-      .footer-names { font-size: 2.2rem; }
-      .container { padding: 0 1.5rem; }
-      .gender-pills { gap: 0.8rem; }
-      .pill { padding: 0.6rem 1.5rem; font-size: 0.68rem; }
+      .footer-names { font-size: 2rem; }
+      .ticket { max-width: 100%; }
+      .shadow-text { font-size: 20vw; }
+    }
+
+    /* Extra small phones */
+    @media (max-width: 380px) {
+      .container { padding: 0 1rem; }
+      .cards-grid { grid-template-columns: 1fr; }
+      #details .cards-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2rem; }
+      .pill { padding: 0.5rem 1rem; font-size: 0.6rem; }
+      .timer-block { padding: 1rem 0.4rem; }
     }
   </style>
 </head>
@@ -873,8 +907,8 @@
     <div class="container">
       <p class="act-label gsap-reveal">— The Credits —</p>
       <div class="hero-pre gsap-reveal" style="margin-top:2rem;">Starring</div>
-      <div class="footer-names gsap-reveal" style="font-size: 5rem; margin: 1rem 0;">Avani &amp; Rupam 💕</div>
-      <p class="gsap-reveal" style="font-family:'Cormorant Garamond'; font-size: 1.6rem; font-style: italic; opacity: 0.8; max-width: 600px; margin: 0 auto; line-height: 1.8;">
+      <div class="footer-names gsap-reveal cast-names">Avani &amp; Rupam 💕</div>
+      <p class="gsap-reveal" style="font-family:'Cormorant Garamond'; font-size: clamp(1.2rem, 4vw, 1.6rem); font-style: italic; opacity: 0.8; max-width: 600px; margin: 0 auto; line-height: 1.8;">
         Featuring: <strong>YOU</strong><br/>
         Because what's a party without the guests?
       </p>
@@ -886,8 +920,8 @@
     <div class="container">
       <p class="act-label gsap-reveal">— Director's Memo —</p>
       <div style="max-width: 700px; margin: 3rem auto 0; line-height: 2;">
-        <p class="gsap-reveal" style="font-size: 1.3rem; font-style: italic; border-bottom: 1px solid #f0f0f0; padding-bottom: 2rem;">🎭 Bring your best laughs and expect many baby puns.</p>
-        <p class="gsap-reveal" style="font-size: 1.2rem; padding: 2.5rem 0; color: #555; font-family: 'Cormorant Garamond', serif;">No boxed gifts, please. Your presence is our greatest gift. Should you wish to bless us further, our registry link will be added here soon. 💕</p>
+        <p class="gsap-reveal" style="font-size: clamp(1.05rem, 3.5vw, 1.3rem); font-style: italic; border-bottom: 1px solid #f0f0f0; padding-bottom: 2rem;">🎭 Bring your best laughs and expect many baby puns.</p>
+        <p class="gsap-reveal" style="font-size: clamp(1rem, 3.2vw, 1.2rem); padding: 2rem 0; color: #555; font-family: 'Cormorant Garamond', serif;">No boxed gifts, please. Your presence is our greatest gift. Should you wish to bless us further, our registry link will be added here soon. 💕</p>
       </div>
     </div>
   </section>
