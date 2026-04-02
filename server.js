@@ -39,12 +39,12 @@ function trackVisit(page) {
       const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
       const user_agent = req.headers['user-agent'] || '';
       const device = parseDevice(user_agent);
-      fetch(`http://ip-api.com/json/${ip}?fields=city,regionName,country`)
+      fetch(`https://ipapi.co/${ip}/json/`)
         .then(r => r.json())
-        .then(geo => [geo.city, geo.regionName, geo.country].filter(Boolean).join(', '))
+        .then(geo => [geo.city, geo.region, geo.country_name].filter(Boolean).join(', '))
         .catch(() => '')
         .then(location => {
-          supabase.from('visits').insert([{ ip, page, user_agent, device, location, timestamp: new Date().toISOString() }]).catch(() => {});
+          supabase.from('visits').insert([{ ip, page, user_agent, device, location: location || '', timestamp: new Date().toISOString() }]).catch(() => {});
         });
     } catch (e) { /* silently ignore */ }
     next();
