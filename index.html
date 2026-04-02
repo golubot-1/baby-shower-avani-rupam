@@ -729,6 +729,181 @@
       .shadow-text { font-size: 20vw; }
     }
 
+    /* ── ADVICE WALL ── */
+    #advice { text-align: center; background: var(--cream); padding: 6rem 0; }
+    .advice-wall {
+      column-count: 2; column-gap: 1.5rem;
+      margin-top: 3rem; max-width: 800px; margin-left: auto; margin-right: auto;
+    }
+    .advice-card {
+      break-inside: avoid;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(181, 137, 46, 0.1);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      text-align: left;
+      transition: all 0.5s var(--ease-out);
+    }
+    .advice-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    }
+    .advice-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-gold);
+      border-color: rgba(181, 137, 46, 0.2);
+    }
+    .advice-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-style: italic;
+      line-height: 1.7; color: var(--text-soft);
+    }
+    .advice-author {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--gold);
+      margin-top: 1rem; font-weight: 500;
+    }
+    .advice-empty {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; color: var(--warm-gray);
+      font-size: 1.1rem; padding: 2rem 0;
+    }
+
+    /* ── CHAT WIDGET ── */
+    .chat-fab {
+      position: fixed; bottom: 5.5rem; right: 2rem; z-index: 9998;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #fff; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 8px 32px rgba(181, 137, 46, 0.35);
+      transition: all 0.4s var(--ease-out);
+    }
+    .chat-fab:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 40px rgba(181, 137, 46, 0.45);
+    }
+    .chat-fab .unread-badge {
+      position: absolute; top: -2px; right: -2px;
+      width: 14px; height: 14px; border-radius: 50%;
+      background: var(--pink); border: 2px solid #fff;
+      display: none;
+    }
+    .chat-panel {
+      position: fixed; bottom: 8.5rem; right: 2rem; z-index: 9998;
+      width: 340px; height: 480px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(181, 137, 46, 0.15);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(212, 175, 55, 0.08);
+      display: none; flex-direction: column;
+      overflow: hidden;
+    }
+    .chat-panel.open { display: flex; }
+    .chat-header {
+      background: linear-gradient(135deg, #141414 0%, #252525 100%);
+      color: #fff; padding: 1.2rem 1.5rem;
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 0.85rem; letter-spacing: 0.15em;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .chat-close {
+      background: none; border: none; color: rgba(255,255,255,0.6);
+      cursor: pointer; font-size: 1.2rem; padding: 0; line-height: 1;
+      transition: color 0.3s;
+    }
+    .chat-close:hover { color: #fff; }
+    .chat-messages {
+      flex: 1; overflow-y: auto; padding: 1rem;
+      display: flex; flex-direction: column; gap: 0.8rem;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: rgba(181, 137, 46, 0.2); border-radius: 2px; }
+    .chat-bubble {
+      max-width: 80%; padding: 0.8rem 1rem;
+      border-radius: 14px; font-family: 'Inter', sans-serif;
+      font-size: 0.85rem; line-height: 1.5; font-weight: 300;
+      word-wrap: break-word;
+    }
+    .chat-bubble.visitor {
+      align-self: flex-end;
+      background: var(--gold-glow);
+      border: 1px solid rgba(181, 137, 46, 0.15);
+      border-bottom-right-radius: 4px;
+      color: var(--text-main);
+    }
+    .chat-bubble.host {
+      align-self: flex-start;
+      background: #f4f4f2;
+      border: 1px solid var(--border-light);
+      border-bottom-left-radius: 4px;
+      color: var(--text-main);
+    }
+    .chat-bubble .bubble-time {
+      font-size: 0.6rem; opacity: 0.5; margin-top: 0.3rem;
+      display: block;
+    }
+    .chat-input-bar {
+      display: flex; gap: 0.5rem; padding: 0.8rem;
+      border-top: 1px solid var(--border-light);
+      background: #fafaf8;
+    }
+    .chat-input-bar input {
+      flex: 1; border: 1.5px solid #e7e5e1; padding: 0.7rem 1rem;
+      font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 300;
+      border-radius: var(--radius-sm); outline: none; background: #fff;
+      transition: border-color 0.3s;
+    }
+    .chat-input-bar input:focus { border-color: var(--gold); }
+    .chat-send-btn {
+      background: var(--text-main); color: #fff; border: none;
+      width: 40px; height: 40px; border-radius: var(--radius-sm);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s var(--ease-out); font-size: 0.9rem;
+    }
+    .chat-send-btn:hover { background: #0a0a0a; transform: translateY(-1px); }
+    .chat-name-prompt {
+      padding: 1.5rem; text-align: center;
+      display: flex; flex-direction: column; gap: 0.8rem;
+      flex: 1; justify-content: center;
+    }
+    .chat-name-prompt p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-style: italic; color: var(--text-soft);
+    }
+    .chat-welcome {
+      padding: 1.5rem; text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 0.95rem;
+      color: var(--warm-gray); opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      .advice-wall { column-count: 1; }
+      .chat-fab {
+        bottom: 1.2rem; right: 1rem;
+        width: 50px; height: 50px; font-size: 1.2rem;
+        position: fixed !important;
+        z-index: 9998 !important;
+      }
+      .chat-panel {
+        width: calc(100vw - 1.5rem); right: 0.75rem;
+        bottom: 4.5rem; height: 65vh;
+        position: fixed !important;
+        z-index: 9998 !important;
+      }
+      .scroll-top { bottom: 1.2rem; right: 4.5rem; }
+    }
+
     /* Extra small phones */
     @media (max-width: 380px) {
       .container { padding: 0 1rem; }
@@ -1009,7 +1184,31 @@
       </div>
     </div>
   </section>
+
 </main>
+
+<!-- CHAT WIDGET -->
+<button class="chat-fab" id="chat-fab" aria-label="Chat with us">
+  <i class="fas fa-comments"></i>
+  <span class="unread-badge" id="chat-unread"></span>
+</button>
+<div class="chat-panel" id="chat-panel">
+  <div class="chat-header">
+    <span>Chat with Parents</span>
+    <button class="chat-close" id="chat-close">&times;</button>
+  </div>
+  <div class="chat-welcome">Say hello! We'd love to hear from you.</div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-name-prompt" id="chat-name-prompt">
+    <p>Before we chat, what's your name?</p>
+    <input class="form-input" type="text" id="chat-name-input" placeholder="Your name" style="text-align:center;"/>
+    <button class="submit-btn" id="chat-name-btn" style="margin-top:0.5rem; font-size:0.8rem; padding:0.8rem;">START CHATTING</button>
+  </div>
+  <div class="chat-input-bar" id="chat-input-bar" style="display:none;">
+    <input type="text" id="chat-msg-input" placeholder="Type a message..." autocomplete="off"/>
+    <button class="chat-send-btn" id="chat-send-btn"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
 
 <footer>
   <div style="margin-bottom: 2rem; opacity: 0.8;">
@@ -1317,10 +1516,167 @@ function addToCalendar() {
         location: "Nuvo Event Space, 7920 Mississauga Rd, Brampton, ON",
         description: "Join us for the big premiere! Traditional attire requested."
     };
-    
+
     const url = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.description)}&location=${encodeURIComponent(event.location)}`;
     window.open(url, '_blank');
 }
+
+// ─── LIVE CHAT ───
+(function() {
+  const fab = document.getElementById('chat-fab');
+  const panel = document.getElementById('chat-panel');
+  const closeBtn = document.getElementById('chat-close');
+  const messagesEl = document.getElementById('chat-messages');
+  const namePrompt = document.getElementById('chat-name-prompt');
+  const inputBar = document.getElementById('chat-input-bar');
+  const msgInput = document.getElementById('chat-msg-input');
+  const sendBtn = document.getElementById('chat-send-btn');
+  const nameInput = document.getElementById('chat-name-input');
+  const nameBtn = document.getElementById('chat-name-btn');
+  const unreadBadge = document.getElementById('chat-unread');
+
+  // Fresh session on every page load
+  let sessionId = crypto.randomUUID();
+  let visitorName = null;
+  let lastTimestamp = null;
+  let pollInterval = null;
+  let isOpen = false;
+
+  function formatTime(ts) {
+    const d = new Date(ts);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function addBubble(msg) {
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${msg.sender}`;
+    bubble.innerHTML = `${escapeHtml(msg.message)}<span class="bubble-time">${formatTime(msg.timestamp)}</span>`;
+    messagesEl.appendChild(bubble);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+  }
+
+  function showChatReady() {
+    namePrompt.style.display = 'none';
+    inputBar.style.display = 'flex';
+    msgInput.focus();
+  }
+
+  // If name already set, show input bar
+  if (visitorName) {
+    showChatReady();
+  }
+
+  // Name submission
+  nameBtn.addEventListener('click', () => {
+    const name = nameInput.value.trim();
+    if (!name) return;
+    visitorName = name;
+    showChatReady();
+  });
+  nameInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') nameBtn.click();
+  });
+
+  // Toggle panel
+  fab.addEventListener('click', () => {
+    isOpen = !isOpen;
+    if (isOpen) {
+      panel.classList.add('open');
+      unreadBadge.style.display = 'none';
+      gsap.fromTo(panel, { opacity: 0, scale: 0.9, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: 'back.out(1.4)' });
+      startPolling();
+      if (visitorName) msgInput.focus();
+    } else {
+      closePanel();
+    }
+  });
+
+  closeBtn.addEventListener('click', closePanel);
+
+  function closePanel() {
+    isOpen = false;
+    gsap.to(panel, { opacity: 0, scale: 0.9, y: 20, duration: 0.3, ease: 'power2.in', onComplete: () => {
+      panel.classList.remove('open');
+    }});
+    stopPolling();
+  }
+
+  // Send message
+  async function sendMessage() {
+    const text = msgInput.value.trim();
+    if (!text) return;
+    msgInput.value = '';
+
+    // Optimistic UI
+    const now = new Date().toISOString();
+    addBubble({ sender: 'visitor', message: text, timestamp: now });
+    lastTimestamp = now;
+
+    try {
+      await fetch('/api/chat/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session_id: sessionId, visitor_name: visitorName, message: text })
+      });
+    } catch (err) {
+      console.error('Failed to send:', err);
+    }
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  msgInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendMessage();
+  });
+
+  // Polling
+  async function pollMessages() {
+    try {
+      let url = `/api/chat/messages?session_id=${sessionId}`;
+      if (lastTimestamp) url += `&after=${encodeURIComponent(lastTimestamp)}`;
+      const res = await fetch(url);
+      const { messages } = await res.json();
+      if (messages && messages.length > 0) {
+        messages.forEach(msg => {
+          // Only render host messages (visitor messages are added optimistically)
+          if (msg.sender === 'host') {
+            addBubble(msg);
+            if (!isOpen) {
+              unreadBadge.style.display = 'block';
+            }
+          }
+        });
+        lastTimestamp = messages[messages.length - 1].timestamp;
+      }
+    } catch (err) {
+      console.error('Poll error:', err);
+    }
+  }
+
+  function startPolling() {
+    if (pollInterval) return;
+    pollMessages(); // immediate first poll
+    pollInterval = setInterval(pollMessages, 3000);
+  }
+
+  function stopPolling() {
+    if (pollInterval) {
+      clearInterval(pollInterval);
+      pollInterval = null;
+    }
+  }
+
+  // Load existing messages on first open
+  fab.addEventListener('click', function loadOnce() {
+    pollMessages();
+    fab.removeEventListener('click', loadOnce);
+  }, { once: true });
+})();
 </script>
 </body>
 </html>

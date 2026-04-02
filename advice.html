@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advice for the Parents-to-Be | Avani & Rupam</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    :root {
+      --primary-bg: #f9f6f0;
+      --text-main: #1c1917;
+      --text-soft: #44403c;
+      --gold: #b5892e;
+      --gold-light: #d4af37;
+      --gold-dark: #8a6d08;
+      --gold-glow: rgba(212, 175, 55, 0.12);
+      --gold-shimmer: linear-gradient(135deg, #c9a84c, #e8d48b, #b5892e, #d4af37);
+      --cream: #fefcf7;
+      --warm-gray: #78716c;
+      --border-light: rgba(0,0,0,0.05);
+      --shadow-sm: 0 4px 12px rgba(0,0,0,0.03);
+      --shadow-md: 0 12px 40px rgba(0,0,0,0.06);
+      --shadow-lg: 0 30px 80px rgba(0,0,0,0.08);
+      --shadow-gold: 0 12px 40px rgba(181, 137, 46, 0.12);
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 24px;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    body {
+      background: radial-gradient(ellipse at 50% 0%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
+                  radial-gradient(ellipse at 50% 100%, var(--cream) 0%, var(--primary-bg) 100%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.7;
+      font-weight: 300;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: var(--gold-light); color: #fff; }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 0 2rem; }
+
+    /* ── HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 4rem 2rem 2rem;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-family: 'Inter', sans-serif; font-size: 0.75rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--gold); text-decoration: none;
+      margin-bottom: 2rem; font-weight: 400;
+      transition: opacity 0.3s;
+    }
+    .back-link:hover { opacity: 0.7; }
+    .act-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.5em;
+      color: var(--gold); text-transform: uppercase;
+      margin-bottom: 1.2rem; opacity: 0.9;
+      display: block; font-weight: 400;
+    }
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(2rem, 4.5vw, 3rem);
+      margin-bottom: 1rem; color: var(--text-main);
+      font-weight: 600; letter-spacing: -0.01em;
+    }
+    .page-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem; font-style: italic;
+      color: var(--text-soft); max-width: 500px;
+      margin: 0 auto; line-height: 1.8;
+    }
+
+    /* ── FORM ── */
+    .form-section { padding: 2rem 0 3rem; }
+    .rsvp-box {
+      background: #fff;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+      padding: 3rem;
+      box-shadow: var(--shadow-lg);
+      border-radius: var(--radius-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    .rsvp-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--gold-shimmer);
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+    .form-group { margin-bottom: 2rem; }
+    .form-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.18em;
+      text-transform: uppercase; font-weight: 500;
+      margin-bottom: 0.8rem; display: block;
+      color: var(--gold-dark);
+    }
+    .form-input, .form-textarea {
+      width: 100%; border: 1.5px solid #e7e5e1; padding: 1rem 1.3rem;
+      font-family: 'Inter', sans-serif; font-size: 0.95rem; font-weight: 300;
+      outline: none; transition: all 0.3s var(--ease-out);
+      background: #fafaf8; border-radius: var(--radius-sm);
+      color: var(--text-main);
+    }
+    .form-input:focus, .form-textarea:focus {
+      border-color: var(--gold);
+      background: #fff;
+      box-shadow: 0 0 0 4px rgba(181, 137, 46, 0.06);
+    }
+    .form-textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
+    .submit-btn {
+      width: 100%;
+      background: var(--text-main); color: #fff; border: none;
+      padding: 1.3rem;
+      font-family: 'Cinzel Decorative', serif; font-size: 0.95rem; font-weight: 600;
+      cursor: pointer; transition: all 0.5s var(--ease-out);
+      margin-top: 1rem; letter-spacing: 0.2em; border-radius: var(--radius-sm);
+      position: relative; overflow: hidden; text-transform: uppercase;
+    }
+    .submit-btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent 30%, rgba(212, 175, 55, 0.2) 100%);
+      opacity: 0; transition: opacity 0.5s;
+    }
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+      background: #0a0a0a;
+    }
+    .submit-btn:hover::after { opacity: 1; }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      display: flex; align-items: center; justify-content: center;
+      gap: 1.2rem; padding: 1rem 0;
+    }
+    .section-divider::before, .section-divider::after {
+      content: ''; width: 80px; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(181, 137, 46, 0.3), transparent);
+    }
+    .divider-diamond {
+      width: 7px; height: 7px; background: var(--gold-light);
+      transform: rotate(45deg); flex-shrink: 0; opacity: 0.6;
+    }
+
+    /* ── ADVICE WALL ── */
+    .wall-section { padding: 2rem 0 5rem; }
+    .wall-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 1.2rem; text-align: center;
+      letter-spacing: 0.1em; color: var(--text-main);
+      margin-bottom: 2rem; font-weight: 600;
+    }
+    .advice-wall {
+      column-count: 2; column-gap: 1.5rem;
+    }
+    .advice-card {
+      break-inside: avoid;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(181, 137, 46, 0.1);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      text-align: left;
+      transition: all 0.5s var(--ease-out);
+    }
+    .advice-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    }
+    .advice-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-gold);
+      border-color: rgba(181, 137, 46, 0.2);
+    }
+    .advice-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.15rem; font-style: italic;
+      line-height: 1.7; color: var(--text-soft);
+    }
+    .advice-author {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--gold);
+      margin-top: 1rem; font-weight: 500;
+    }
+    .advice-empty {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; color: var(--warm-gray);
+      font-size: 1.1rem; padding: 2rem 0; text-align: center;
+    }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      padding: 3rem 2rem; text-align: center;
+      position: relative;
+    }
+    .page-footer::before {
+      content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 160px; height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-light), transparent);
+    }
+    .footer-names {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2rem; color: var(--gold); margin-bottom: 0.5rem;
+    }
+    .footer-sub {
+      font-size: 0.75rem; letter-spacing: 0.3em; opacity: 0.4;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 768px) {
+      .page-header { padding: 3rem 1.2rem 1.5rem; }
+      .section-title { font-size: clamp(1.5rem, 6vw, 2rem); }
+      .rsvp-box { padding: 2rem 1.2rem; border-radius: var(--radius-md); }
+      .form-input, .form-textarea { padding: 0.85rem 1rem; font-size: 0.9rem; }
+      .form-label { font-size: 0.65rem; }
+      .submit-btn { padding: 1.1rem; font-size: 0.85rem; letter-spacing: 0.15em; }
+      .advice-wall { column-count: 1; }
+      .container { padding: 0 1.2rem; }
+      .section-divider::before, .section-divider::after { width: 35px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Invitation</a>
+  <p class="act-label">— Words of Wisdom —</p>
+  <h1 class="section-title">Advice for the Parents-to-Be</h1>
+  <p class="page-subtitle">Share your best parenting tips, heartfelt wishes, or words of encouragement for Avani & Rupam.</p>
+</div>
+
+<div class="form-section">
+  <div class="container">
+    <div class="rsvp-box">
+      <form id="advice-form">
+        <div class="form-group">
+          <label class="form-label">Your Name *</label>
+          <input class="form-input" type="text" name="guest_name" required placeholder="Your name"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Your Advice or Wishes *</label>
+          <textarea class="form-textarea" name="advice_text" required placeholder="Share your best parenting wisdom, a heartfelt wish, or words of encouragement..."></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="advice-btn">SHARE YOUR WISDOM</button>
+      </form>
+      <div id="advice-response" style="display:none; text-align:center; font-family:'Dancing Script'; font-size: 2.5rem; color: var(--gold); padding: 3rem 0;">
+        Thank you for your wisdom! 💕
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider"><div class="divider-diamond"></div></div>
+
+<div class="wall-section">
+  <div class="container">
+    <h2 class="wall-title">From Our Loved Ones</h2>
+    <div id="advice-wall" class="advice-wall"></div>
+  </div>
+</div>
+
+<div class="page-footer">
+  <div class="footer-names">Avani & Rupam 💕</div>
+  <p class="footer-sub">Baby Shower · April 26, 2026 · Brampton</p>
+</div>
+
+<script>
+// ─── ADVICE WALL ───
+async function loadAdvice() {
+  try {
+    const res = await fetch('/api/advice');
+    const { advice } = await res.json();
+    const wall = document.getElementById('advice-wall');
+    if (!advice || advice.length === 0) {
+      wall.innerHTML = '<p class="advice-empty">Be the first to share your wisdom!</p>';
+      return;
+    }
+    wall.innerHTML = advice.map(a => `
+      <div class="advice-card">
+        <div class="advice-text">"${a.advice_text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}"</div>
+        <div class="advice-author">— ${a.guest_name.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+      </div>
+    `).join('');
+
+    // Animate cards in
+    document.querySelectorAll('.advice-card').forEach((card, i) => {
+      gsap.fromTo(card, { opacity: 0, y: 20 }, {
+        opacity: 1, y: 0, duration: 0.6, delay: i * 0.1, ease: 'power2.out'
+      });
+    });
+  } catch (err) {
+    console.error('Failed to load advice:', err);
+  }
+}
+
+loadAdvice();
+
+document.getElementById('advice-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('advice-btn');
+  btn.disabled = true;
+  btn.textContent = 'SENDING...';
+
+  const data = Object.fromEntries(new FormData(this));
+  try {
+    const res = await fetch('/api/advice', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (res.ok) {
+      const form = this;
+      gsap.to(form, { opacity: 0, y: -20, duration: 0.5, onComplete: () => {
+        form.style.display = 'none';
+        const response = document.getElementById('advice-response');
+        response.style.display = 'block';
+        gsap.fromTo(response, { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.8, ease: 'back.out(1.2)' });
+      }});
+      loadAdvice();
+    } else {
+      alert('Error submitting advice. Please try again.');
+      btn.disabled = false;
+      btn.textContent = 'SHARE YOUR WISDOM';
+    }
+  } catch (err) {
+    alert('System busy. Try again.');
+    btn.disabled = false;
+    btn.textContent = 'SHARE YOUR WISDOM';
+  }
+});
+</script>
+</body>
+</html>

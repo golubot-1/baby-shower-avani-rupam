@@ -161,23 +161,44 @@
         </div>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Count</th>
-                <th>Prediction</th>
-                <th>Message</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody id="guest-table">
-            <!-- Rows injected here -->
-        </tbody>
-    </table>
+    <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+        <button class="btn" onclick="showTab('rsvps')" id="tab-rsvps" style="background:var(--gold); color:#fff;">RSVPs</button>
+        <button class="btn" onclick="showTab('advice')" id="tab-advice" style="background:#eee; color:#666;">Advice Wall</button>
+    </div>
+
+    <div id="rsvps-tab">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Count</th>
+                    <th>Prediction</th>
+                    <th>Message</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="guest-table">
+                <!-- Rows injected here -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="advice-tab" style="display:none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Advice</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="advice-table"></tbody>
+        </table>
+    </div>
 </div>
 
 <script>
@@ -271,6 +292,54 @@
         if (res.ok) {
             allRSVPs = allRSVPs.filter(r => r.id !== id);
             renderTable(allRSVPs);
+        } else {
+            alert('Delete failed');
+        }
+    }
+
+    function showTab(tab) {
+        document.getElementById('rsvps-tab').style.display = tab === 'rsvps' ? 'block' : 'none';
+        document.getElementById('advice-tab').style.display = tab === 'advice' ? 'block' : 'none';
+        document.getElementById('tab-rsvps').style.background = tab === 'rsvps' ? 'var(--gold)' : '#eee';
+        document.getElementById('tab-rsvps').style.color = tab === 'rsvps' ? '#fff' : '#666';
+        document.getElementById('tab-advice').style.background = tab === 'advice' ? 'var(--gold)' : '#eee';
+        document.getElementById('tab-advice').style.color = tab === 'advice' ? '#fff' : '#666';
+        if (tab === 'advice') fetchAdvice();
+    }
+
+    let allAdvice = [];
+    async function fetchAdvice() {
+        try {
+            const res = await fetch('/api/advice');
+            const data = await res.json();
+            allAdvice = data.advice || [];
+            renderAdvice(allAdvice);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function renderAdvice(list) {
+        const table = document.getElementById('advice-table');
+        if (list.length === 0) {
+            table.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:#999;">No advice yet.</td></tr>';
+            return;
+        }
+        table.innerHTML = list.map(a => `<tr>
+            <td style="font-size:0.8rem; color:#999;">${new Date(a.timestamp).toLocaleDateString()}</td>
+            <td><strong>${a.guest_name}</strong></td>
+            <td style="font-size:0.9rem; color:#666;">${a.advice_text}</td>
+            <td><button class="btn btn-delete" onclick="deleteAdvice('${a.id}')">Delete</button></td>
+        </tr>`).join('');
+    }
+
+    async function deleteAdvice(id) {
+        if (!confirm('Delete this advice?')) return;
+        const key = localStorage.getItem('as_key');
+        const res = await fetch(`/api/advice/${id}?key=${key}`, { method: 'DELETE' });
+        if (res.ok) {
+            allAdvice = allAdvice.filter(a => a.id !== id);
+            renderAdvice(allAdvice);
         } else {
             alert('Delete failed');
         }
