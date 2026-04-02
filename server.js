@@ -13,11 +13,40 @@ const supabaseKey = 'sb_publishable_WezuM1X4TcccJIKr4P9RyQ_mte-rjVe';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // ─── VISIT TRACKING ───
+function parseDevice(ua) {
+  if (!ua) return 'Unknown';
+  // OS
+  let os = 'Unknown OS';
+  if (/iPhone/.test(ua)) os = 'iPhone';
+  else if (/iPad/.test(ua)) os = 'iPad';
+  else if (/Android/.test(ua)) os = 'Android';
+  else if (/Mac OS X/.test(ua)) os = 'Mac';
+  else if (/Windows/.test(ua)) os = 'Windows';
+  else if (/Linux/.test(ua)) os = 'Linux';
+  // Browser
+  let browser = 'Unknown Browser';
+  if (/CriOS|Chrome/.test(ua) && !/Edg/.test(ua)) browser = 'Chrome';
+  else if (/Safari/.test(ua) && !/Chrome/.test(ua)) browser = 'Safari';
+  else if (/Firefox|FxiOS/.test(ua)) browser = 'Firefox';
+  else if (/Edg/.test(ua)) browser = 'Edge';
+  return `${os} / ${browser}`;
+}
+
 function trackVisit(page) {
-  return async (req, res, next) => {
-    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
-    const user_agent = req.headers['user-agent'] || '';
-    supabase.from('visits').insert([{ ip, page, user_agent, timestamp: new Date().toISOString() }]).then().catch(err => console.error('Visit log error:', err));
+  return (req, res, next) => {
+    // Fire-and-forget — never block or break the page
+    try {
+      const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
+      const user_agent = req.headers['user-agent'] || '';
+      const device = parseDevice(user_agent);
+      fetch(`http://ip-api.com/json/${ip}?fields=city,regionName,country`)
+        .then(r => r.json())
+        .then(geo => [geo.city, geo.regionName, geo.country].filter(Boolean).join(', '))
+        .catch(() => '')
+        .then(location => {
+          supabase.from('visits').insert([{ ip, page, user_agent, device, location, timestamp: new Date().toISOString() }]).catch(() => {});
+        });
+    } catch (e) { /* silently ignore */ }
     next();
   };
 }

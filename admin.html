@@ -216,9 +216,11 @@
             <thead>
                 <tr>
                     <th>IP Address</th>
+                    <th>Location</th>
+                    <th>Device</th>
                     <th>Page</th>
                     <th>Last Visit</th>
-                    <th>Visit Count</th>
+                    <th>Visits</th>
                 </tr>
             </thead>
             <tbody id="visits-table"></tbody>
@@ -344,20 +346,24 @@
             // Group by IP
             const byIp = {};
             visits.forEach(v => {
-                if (!byIp[v.ip]) byIp[v.ip] = { count: 0, pages: new Set(), last: v.timestamp };
+                if (!byIp[v.ip]) byIp[v.ip] = { count: 0, pages: new Set(), devices: new Set(), location: '', last: v.timestamp };
                 byIp[v.ip].count++;
                 byIp[v.ip].pages.add(v.page);
+                if (v.device) byIp[v.ip].devices.add(v.device);
+                if (v.location) byIp[v.ip].location = v.location;
                 if (new Date(v.timestamp) > new Date(byIp[v.ip].last)) byIp[v.ip].last = v.timestamp;
             });
 
             const table = document.getElementById('visits-table');
             const entries = Object.entries(byIp).sort((a, b) => new Date(b[1].last) - new Date(a[1].last));
             if (entries.length === 0) {
-                table.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:#999;">No visits yet.</td></tr>';
+                table.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:2rem; color:#999;">No visits yet.</td></tr>';
                 return;
             }
             table.innerHTML = entries.map(([ip, info]) => `<tr>
                 <td><strong>${ip}</strong></td>
+                <td style="font-size:0.85rem; color:#666;">${info.location || '-'}</td>
+                <td style="font-size:0.85rem; color:#666;">${[...info.devices].join(', ') || '-'}</td>
                 <td style="font-size:0.85rem; color:#666;">${[...info.pages].join(', ')}</td>
                 <td style="font-size:0.8rem; color:#999;">${new Date(info.last).toLocaleString()}</td>
                 <td>${info.count}</td>
