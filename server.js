@@ -33,22 +33,19 @@ function parseDevice(ua) {
 }
 
 function trackVisit(page) {
-  return (req, res, next) => {
-    // Fire-and-forget — never block or break the page
+  return async (req, res, next) => {
+    // Await geo + insert BEFORE next() so Vercel doesn't kill the function early
     try {
       const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
       const user_agent = req.headers['user-agent'] || '';
       const device = parseDevice(user_agent);
-      // Insert visit immediately, then update location async
       const ts = new Date().toISOString();
-      // Get location first, then insert everything together
-      fetch(`https://freeipapi.com/api/json/${ip}`)
-        .then(r => r.json())
-        .then(geo => [geo.cityName, geo.regionName, geo.countryName].filter(Boolean).join(', '))
-        .catch(() => '')
-        .then(location => {
-          supabase.from('visits').insert([{ ip, page, user_agent, device, location: location || '', timestamp: ts }]).catch(() => {});
-        });
+      let location = '';
+      try {
+        const geo = await fetch(`https://freeipapi.com/api/json/${ip}`, { signal: AbortSignal.timeout(2000) }).then(r => r.json());
+        location = [geo.cityName, geo.regionName, geo.countryName].filter(Boolean).join(', ');
+      } catch (e) { /* geo failed, continue */ }
+      await supabase.from('visits').insert([{ ip, page, user_agent, device, location, timestamp: ts }]);
     } catch (e) { /* silently ignore */ }
     next();
   };
