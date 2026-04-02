@@ -39,13 +39,20 @@ function trackVisit(page) {
       const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
       const user_agent = req.headers['user-agent'] || '';
       const device = parseDevice(user_agent);
-      fetch(`https://ipapi.co/${ip}/json/`)
-        .then(r => r.json())
-        .then(geo => [geo.city, geo.region, geo.country_name].filter(Boolean).join(', '))
-        .catch(() => '')
-        .then(location => {
-          supabase.from('visits').insert([{ ip, page, user_agent, device, location: location || '', timestamp: new Date().toISOString() }]).catch(() => {});
-        });
+      // Insert visit immediately, then update location async
+      const visitData = { ip, page, user_agent, device, location: '', timestamp: new Date().toISOString() };
+      supabase.from('visits').insert([visitData]).then(({ data }) => {
+        // Try to get location and update the row
+        fetch(`https://freeipapi.com/api/json/${ip}`)
+          .then(r => r.json())
+          .then(geo => {
+            const loc = [geo.cityName, geo.regionName, geo.countryName].filter(Boolean).join(', ');
+            if (loc && data && data[0]) {
+              supabase.from('visits').update({ location: loc }).eq('id', data[0].id).then().catch(() => {});
+            }
+          })
+          .catch(() => {});
+      }).catch(() => {});
     } catch (e) { /* silently ignore */ }
     next();
   };
