@@ -6,7 +6,6 @@ const path = require('path');
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
 
 // SUPABASE CONFIG
 const supabaseUrl = 'https://lgcqmvrgpnfnyqvjqxab.supabase.co';
@@ -23,9 +22,13 @@ function trackVisit(page) {
   };
 }
 
+// Page routes BEFORE static so visit tracking fires
 app.get('/', trackVisit('/'), (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 app.get('/advice', trackVisit('/advice'), (req, res) => res.sendFile(path.join(__dirname, 'advice.html')));
+
+// Static files (CSS, JS, images) after page routes
+app.use(express.static(__dirname));
 
 app.get('/api/visits', async (req, res) => {
   if (req.query.key !== 'babyshower2026') return res.status(401).json({ error: 'Unauthorized' });
