@@ -164,6 +164,7 @@
     <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
         <button class="btn" onclick="showTab('rsvps')" id="tab-rsvps" style="background:var(--gold); color:#fff;">RSVPs</button>
         <button class="btn" onclick="showTab('advice')" id="tab-advice" style="background:#eee; color:#666;">Advice Wall</button>
+        <button class="btn" onclick="showTab('visits')" id="tab-visits" style="background:#eee; color:#666;">Visits</button>
     </div>
 
     <div id="rsvps-tab">
@@ -197,6 +198,30 @@
                 </tr>
             </thead>
             <tbody id="advice-table"></tbody>
+        </table>
+    </div>
+
+    <div id="visits-tab" style="display:none;">
+        <div class="stats" style="margin-bottom:1.5rem;">
+            <div class="stat-card">
+                <span class="stat-num" id="stat-total-visits">0</span>
+                <span class="stat-label">Total Visits</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-num" id="stat-unique-visits">0</span>
+                <span class="stat-label">Unique IPs</span>
+            </div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>IP Address</th>
+                    <th>Page</th>
+                    <th>Last Visit</th>
+                    <th>Visit Count</th>
+                </tr>
+            </thead>
+            <tbody id="visits-table"></tbody>
         </table>
     </div>
 </div>
@@ -298,13 +323,48 @@
     }
 
     function showTab(tab) {
-        document.getElementById('rsvps-tab').style.display = tab === 'rsvps' ? 'block' : 'none';
-        document.getElementById('advice-tab').style.display = tab === 'advice' ? 'block' : 'none';
-        document.getElementById('tab-rsvps').style.background = tab === 'rsvps' ? 'var(--gold)' : '#eee';
-        document.getElementById('tab-rsvps').style.color = tab === 'rsvps' ? '#fff' : '#666';
-        document.getElementById('tab-advice').style.background = tab === 'advice' ? 'var(--gold)' : '#eee';
-        document.getElementById('tab-advice').style.color = tab === 'advice' ? '#fff' : '#666';
+        ['rsvps', 'advice', 'visits'].forEach(t => {
+            document.getElementById(t + '-tab').style.display = tab === t ? 'block' : 'none';
+            document.getElementById('tab-' + t).style.background = tab === t ? 'var(--gold)' : '#eee';
+            document.getElementById('tab-' + t).style.color = tab === t ? '#fff' : '#666';
+        });
         if (tab === 'advice') fetchAdvice();
+        if (tab === 'visits') fetchVisits();
+    }
+
+    async function fetchVisits() {
+        try {
+            const key = localStorage.getItem('as_key');
+            const res = await fetch('/api/visits?key=' + key);
+            const data = await res.json();
+            document.getElementById('stat-total-visits').textContent = data.total || 0;
+            document.getElementById('stat-unique-visits').textContent = data.unique || 0;
+
+            const visits = data.visits || [];
+            // Group by IP
+            const byIp = {};
+            visits.forEach(v => {
+                if (!byIp[v.ip]) byIp[v.ip] = { count: 0, pages: new Set(), last: v.timestamp };
+                byIp[v.ip].count++;
+                byIp[v.ip].pages.add(v.page);
+                if (new Date(v.timestamp) > new Date(byIp[v.ip].last)) byIp[v.ip].last = v.timestamp;
+            });
+
+            const table = document.getElementById('visits-table');
+            const entries = Object.entries(byIp).sort((a, b) => new Date(b[1].last) - new Date(a[1].last));
+            if (entries.length === 0) {
+                table.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:2rem; color:#999;">No visits yet.</td></tr>';
+                return;
+            }
+            table.innerHTML = entries.map(([ip, info]) => `<tr>
+                <td><strong>${ip}</strong></td>
+                <td style="font-size:0.85rem; color:#666;">${[...info.pages].join(', ')}</td>
+                <td style="font-size:0.8rem; color:#999;">${new Date(info.last).toLocaleString()}</td>
+                <td>${info.count}</td>
+            </tr>`).join('');
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     let allAdvice = [];

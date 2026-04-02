@@ -13,9 +13,33 @@ const supabaseUrl = 'https://lgcqmvrgpnfnyqvjqxab.supabase.co';
 const supabaseKey = 'sb_publishable_WezuM1X4TcccJIKr4P9RyQ_mte-rjVe';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+// ─── VISIT TRACKING ───
+function trackVisit(page) {
+  return async (req, res, next) => {
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
+    const user_agent = req.headers['user-agent'] || '';
+    supabase.from('visits').insert([{ ip, page, user_agent, timestamp: new Date().toISOString() }]).then().catch(err => console.error('Visit log error:', err));
+    next();
+  };
+}
+
+app.get('/', trackVisit('/'), (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.get('/advice', (req, res) => res.sendFile(path.join(__dirname, 'advice.html')));
+app.get('/advice', trackVisit('/advice'), (req, res) => res.sendFile(path.join(__dirname, 'advice.html')));
+
+app.get('/api/visits', async (req, res) => {
+  if (req.query.key !== 'babyshower2026') return res.status(401).json({ error: 'Unauthorized' });
+  try {
+    const { data, error } = await supabase.from('visits').select('*').order('timestamp', { ascending: false });
+    if (error) throw error;
+    const visits = data || [];
+    const uniqueIPs = [...new Set(visits.map(v => v.ip))];
+    res.json({ total: visits.length, unique: uniqueIPs.length, ips: uniqueIPs, visits });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch visits' });
+  }
+});
 
 app.post('/api/rsvp', async (req, res) => {
   const { name, attending } = req.body;
