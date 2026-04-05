@@ -55,6 +55,7 @@ function trackVisit(page) {
 app.get('/', trackVisit('/'), (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
 app.get('/advice', trackVisit('/advice'), (req, res) => res.sendFile(path.join(__dirname, 'advice.html')));
+app.get('/thankyou', trackVisit('/thankyou'), (req, res) => res.sendFile(path.join(__dirname, 'whatsapp-card.html')));
 
 // Static files (CSS, JS, images) after page routes
 app.use(express.static(__dirname));

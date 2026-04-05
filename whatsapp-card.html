@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You! — Avani & Rupam's Baby Shower</title>
+  <meta property="og:title" content="You're Part of Our Story! 👶">
+  <meta property="og:description" content="Thank you for your RSVP! Here are the details for Avani & Rupam's Baby Shower — April 26, 2026">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://baby-shower-avani-rupam.vercel.app/thankyou">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; background: #e8e0d0;
+      padding: 20px;
+    }
+    .card {
+      width: 100%; max-width: 420px;
+      background: #fffdf8;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+    }
+    .card-header {
+      background: linear-gradient(135deg, #141414, #252525);
+      padding: 36px 32px 28px;
+      text-align: center;
+    }
+    .card-header .emoji { font-size: 32px; margin-bottom: 8px; }
+    .card-header h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 18px; color: #fff;
+      font-weight: 400; letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .card-header .gold-line {
+      width: 50px; height: 1px;
+      background: linear-gradient(to right, transparent, #d4af37, transparent);
+      margin: 0 auto 12px;
+    }
+    .card-header .event-name {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px; color: #d4af37;
+      letter-spacing: 3px; text-transform: uppercase;
+    }
+    .gold-bar { height: 3px; background: linear-gradient(90deg, #c9a84c, #e8d48b, #b5892e, #d4af37); }
+    .card-body { padding: 28px 32px; }
+    .greeting {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px; font-style: italic;
+      color: #1c1917; margin-bottom: 14px;
+    }
+    .message {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; color: #44403c;
+      line-height: 1.8; margin-bottom: 20px;
+      font-weight: 300;
+    }
+    .details-box {
+      background: #fefcf7;
+      border: 1px solid rgba(181,137,46,0.12);
+      border-radius: 14px;
+      padding: 22px 24px;
+      margin-bottom: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .details-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #d4af37, transparent);
+    }
+    .details-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; letter-spacing: 3px;
+      color: #b5892e; text-transform: uppercase;
+      font-weight: 500; margin-bottom: 14px;
+    }
+    .detail-row {
+      display: flex; gap: 10px; align-items: flex-start;
+      margin-bottom: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; color: #1c1917;
+    }
+    .detail-row .icon { width: 20px; text-align: center; flex-shrink: 0; }
+    .detail-row .text { font-weight: 400; }
+    .detail-row .sub { color: #78716c; font-size: 11px; font-weight: 300; }
+    .registry-note {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; color: #44403c;
+      line-height: 1.8; margin-bottom: 16px;
+      font-weight: 300;
+    }
+    .registry-link {
+      display: block; text-align: center;
+      background: #1c1917; color: #fff;
+      text-decoration: none; padding: 12px 28px;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; font-weight: 500;
+      margin-bottom: 16px;
+    }
+    .advice-link {
+      display: block; text-align: center;
+      background: #fefcf7; color: #b5892e;
+      text-decoration: none; padding: 11px 28px;
+      border-radius: 10px; border: 1px solid #d4af37;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; letter-spacing: 2px;
+      text-transform: uppercase; font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .divider {
+      width: 100%; height: 1px; margin: 20px 0;
+      background: linear-gradient(to right, transparent, rgba(181,137,46,0.2), transparent);
+    }
+    .signoff {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px; font-style: italic;
+      color: #1c1917; margin-bottom: 4px;
+    }
+    .card-footer {
+      background: #fefcf7;
+      padding: 24px 32px;
+      text-align: center;
+      border-top: 1px solid rgba(181,137,46,0.06);
+    }
+    .footer-names {
+      font-family: 'Dancing Script', cursive;
+      font-size: 26px; color: #b5892e;
+      margin-bottom: 4px;
+    }
+    .footer-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: 9px; letter-spacing: 3px;
+      color: #bbb; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <div class="emoji">&#x1F476;</div>
+      <h1>You're Part of Our Story!</h1>
+      <div class="gold-line"></div>
+      <div class="event-name">Avani & Rupam's Baby Shower</div>
+    </div>
+    <div class="gold-bar"></div>
+    <div class="card-body">
+      <p class="greeting">Hi there!</p>
+      <p class="message">
+        Thank you for your RSVP! We're really looking forward to celebrating with you as we get ready to welcome our little one.
+      </p>
+
+      <div class="details-box">
+        <div class="details-label">Event Details</div>
+        <div class="detail-row">
+          <span class="icon">&#x1F5D3;</span>
+          <div><span class="text">Sunday, April 26, 2026</span></div>
+        </div>
+        <div class="detail-row">
+          <span class="icon">&#x23F0;</span>
+          <div><span class="text">11:00 AM - 2:30 PM</span></div>
+        </div>
+        <div class="detail-row">
+          <span class="icon">&#x1F4CD;</span>
+          <div>
+            <span class="text">Nuvo Event Space</span><br>
+            <span class="sub">7920 Mississauga Rd, Brampton, ON</span>
+          </div>
+        </div>
+        <div class="detail-row">
+          <span class="icon">&#x1F457;</span>
+          <div>
+            <span class="text">Traditional / Indo-Western</span><br>
+            <span class="sub" style="font-style:italic;">Colourful vibes encouraged!</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="registry-note">
+        Please don't feel obligated to bring a gift — just bring your good vibes! That said, if you'd like to, here's our registry:
+      </p>
+
+      <a class="registry-link" href="https://my.babylist.com/avani-rupam">View Baby Registry</a>
+      <a class="advice-link" href="https://baby-shower-avani-rupam.vercel.app/advice">Share Your Wisdom</a>
+
+      <div class="divider"></div>
+      <p class="signoff">Can't wait to see you on April 26th!</p>
+    </div>
+    <div class="card-footer">
+      <div class="footer-names">Avani & Rupam &#x1F495;</div>
+      <div class="footer-sub">Baby Shower &middot; April 26, 2026 &middot; Brampton</div>
+    </div>
+  </div>
+</body>
+</html>
